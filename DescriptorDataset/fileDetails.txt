@@ -1,0 +1,9 @@
+Details of the file DescriptorDataset/sr-mmp_nosalt.sdf.std_nodupl_class.sdf_MACCS_166bit.csv
+(5647, 167)
+5647
+Details of the file DescriptorDataset/smiles_cas_N6512.sdf.std_class.sdf_MACCS_166bit.csv
+(6509, 167)
+6509
+Details of the file DescriptorDataset/bursi_nosalts_molsign.sdf.txt_MACCS_166bit.csv
+(4337, 167)
+4337
