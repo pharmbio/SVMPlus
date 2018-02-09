@@ -33,14 +33,14 @@ def svmPlusOpt(X, y, XStar=None, C=10, kernel="linear", kernelParam = None,
     elif kernel == "poly":
         kernelMethod = utils.polyKernel
     else:
-        kernelMethod = utils.rbKernel
+        kernelMethod = utils.rbfKernel
 
     if kernelStar == "linear":
         kernelStarMethod = utils.linearKernel
     elif kernelStar == "poly":
         kernelStarMethod = utils.polyKernel
     else:
-        kernelStarMethod = utils.rbKernel
+        kernelStarMethod = utils.rbfKernel
 
     # compute the matrix K (nSamples X nSamples) using kernel function
     K = np.zeros((nSamples, nSamples))

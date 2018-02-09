@@ -80,6 +80,7 @@ def compareSVMAndSVMPlus(fileName1, fileName2):
     else:
         print("different split for both the files")
 
+    '''
     # compute prediction accuracy using SVM for file1
     svm_clf = svmPlus.svmPlusOpt(X_train, y_train, XStar=None, C=10, kernel="linear",
                                  kernelParam=None)  # standard SVM
@@ -95,11 +96,11 @@ def compareSVMAndSVMPlus(fileName1, fileName2):
     correct = np.sum(y_predict == yStar_test)
     print("Prediction accuracy using SVM for ", fileName2)
     print("%d out of %d predictions correct" % (correct, len(y_predict)))
-
+    '''
     # compute prediction accuracy using SVM+ for file1, and file2 as a priv-info
-    clf = svmPlus.svmPlusOpt(X_train, y_train, XStar=XStar_train, C=10, kernel="linear",
-                             kernelParam=None, kernelStar="linear", kernelStarParam=None,
-                             gamma=1) #linear kernel as of now
+    clf = svmPlus.svmPlusOpt(X_train, y_train, XStar=XStar_train, C=10, kernel="rbf",
+                             kernelParam=0.5, kernelStar="rbf", kernelStarParam=0.5,
+                             gamma=0.5) #linear kernel as of now
     y_predict = svmPlus.predict(X_test, clf)
     correct = np.sum(y_predict == y_test)
     print("Prediction accuracy using SVM+ for ", fileName1, fileName2)
@@ -129,6 +130,6 @@ if __name__ == "__main__":
     #readDetailsDescriptorFiles()
     #for fileName in listFileName:
     #    runSVMSigDescFile(fileName)
-    #compareSVMAndSVMPlus(listFileName[1], listFileName[0])
-    runSVMSigDescFile(listFileName[1], C = 100)
+    compareSVMAndSVMPlus(listFileName[1], listFileName[0])
+    #runSVMSigDescFile(listFileName[1], C = 100)
 
