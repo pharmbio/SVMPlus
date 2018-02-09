@@ -17,7 +17,6 @@ def polyKernel(x1, x2, param = 2):
 
 # Radial basis kernel
 def rbfKernel(x1, x2, param = 1.0):
-    #gamma = 2 * (param ** 2)
     return np.exp(-(LA.norm(x1 - x2) ** 2) * param)
 
 
