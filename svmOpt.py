@@ -77,11 +77,11 @@ def svmOptProb(X, y, kernel="linear", C=None, param = None):
     clf['K'] = K
     clf['sv_x'] = sv_x
     clf['sv_y'] = sv_y
-    clf['sv'] = sv_x
     clf['alpha'] = alpha
     clf['w'] = w
     clf['b'] = bias
     clf['kernel'] = kernelMethod
+    clf['kernelParam'] = param
 
     return clf
 
@@ -93,7 +93,7 @@ def funcLine(x, w, b, c=0):
 
 # for plotting margin
 def plotSvmMargin(X, y, clf):
-    sv = clf['sv']
+    sv = clf['sv_x']
     X1_train = X[y == 1]
     X2_train = X[y == -1]
 

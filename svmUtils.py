@@ -38,8 +38,8 @@ def project(w, b, X, clf):
         y_predict = np.zeros(len(X))
         for i in range(len(X)):
             s = 0
-            for a, sv_y, sv in zip(clf['alpha'], clf['sv_y'], clf['sv']):
-                s += a * sv_y * clf['kernel'](X[i], sv)
+            for a, sv_y, sv in zip(clf['alpha'], clf['sv_y'], clf['sv_x']):
+                s += a * sv_y * clf['kernel'](X[i], sv, clf['kernelParam'])
             y_predict[i] = s
         return y_predict + b
 
@@ -51,7 +51,7 @@ def predict(X, clf):
 
 # for plotting margin
 def plotSvmMargin(X, y, clf):
-    sv = clf['sv']
+    sv = clf['sv_x']
     X1_train = X[y == 1]
     X2_train = X[y == -1]
 
@@ -85,7 +85,7 @@ def plotSvmMargin(X, y, clf):
 
 
 def plot_contour(X, y, clf, fileName = None):
-    sv = clf['sv']
+    sv = clf['sv_x']
     X1_train = X[y == 1]
     X2_train = X[y == -1]
 

@@ -55,7 +55,8 @@ def svmPlusOpt(X, y, XStar=None, C=10, kernel="linear", kernelParam = None,
     P1 = np.concatenate((KSvm + KStar / float(gamma), KStar / float(gamma)), axis=1)
     P2 = np.concatenate((KStar / float(gamma),KStar / float(gamma)), axis=1)
     P = np.concatenate((P1, P2), axis=0)
-    A = np.concatenate((np.ones((1, 2 * nSamples)), np.concatenate((np.transpose(matrix(y)), np.zeros((1, nSamples))), axis=1)),
+    A = np.concatenate((np.ones((1, 2 * nSamples)),
+                        np.concatenate((np.transpose(matrix(y)), np.zeros((1, nSamples))), axis=1)),
                         axis=0)
     b = np.array([[nSamples * C], [0]])
     G = -np.eye(2 * nSamples)
@@ -101,13 +102,13 @@ def svmPlusOpt(X, y, XStar=None, C=10, kernel="linear", kernelParam = None,
 
     clf = {}
     clf['K'] = K
-    clf['sv_x'] = sv_x
-    clf['sv_y'] = sv_y
-    clf['sv'] = sv_x
+    clf['sv_x'] = sv_x # support vector's features
+    clf['sv_y'] = sv_y # support vector's labels
     clf['alpha'] = alpha
     clf['w'] = w
     clf['b'] = bias
     clf['kernel'] = kernelMethod
+    clf['kernelParam'] = kernelParam
 
     return clf
 
@@ -119,8 +120,8 @@ def project(w, b, X, clf):
         y_predict = np.zeros(len(X))
         for i in range(len(X)):
             s = 0
-            for a, sv_y, sv in zip(clf['alpha'], clf['sv_y'], clf['sv']):
-                s += a * sv_y * clf['kernel'](X[i], sv)
+            for a, sv_y, sv in zip(clf['alpha'], clf['sv_y'], clf['sv_x']):
+                s += a * sv_y * clf['kernel'](X[i], sv, clf['kernelParam'])
             y_predict[i] = s
         return y_predict + b
 
