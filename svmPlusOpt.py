@@ -79,7 +79,8 @@ def svmPlusOpt(X, y, XStar=None, C=10, kernel="linear", kernelParam = None,
     alpha = np.ravel(sol['x'][0:nSamples])
 
     # Support vectors have non zero lagrange multipliers
-    sv = alpha > 2e-3
+    sv = alpha > 1e-4 # tolerance
+    print("%d support vectors out of %d points" % (len(sv), nSamples))
     ind = np.arange(len(alpha))[sv]
     alpha = alpha[sv]
     sv_x = X[sv]
@@ -101,7 +102,6 @@ def svmPlusOpt(X, y, XStar=None, C=10, kernel="linear", kernelParam = None,
         w = None
 
     clf = {}
-    clf['K'] = K
     clf['sv_x'] = sv_x # support vector's features
     clf['sv_y'] = sv_y # support vector's labels
     clf['alpha'] = alpha
@@ -113,9 +113,9 @@ def svmPlusOpt(X, y, XStar=None, C=10, kernel="linear", kernelParam = None,
     return clf
 
 
-def project(w, b, X, clf):
-    if w is not None:
-        return np.dot(X, w) + b
+def project(X, clf):
+    if clf['w'] is not None:
+        return np.dot(X, clf['w']) + clf['b']
     else:
         y_predict = np.zeros(len(X))
         for i in range(len(X)):
@@ -123,9 +123,9 @@ def project(w, b, X, clf):
             for a, sv_y, sv in zip(clf['alpha'], clf['sv_y'], clf['sv_x']):
                 s += a * sv_y * clf['kernel'](X[i], sv, clf['kernelParam'])
             y_predict[i] = s
-        return y_predict + b
+        return y_predict + clf['b']
 
 
 def predict(X, clf):
-    return np.sign(project(clf['w'], clf['b'], X, clf))
+    return np.sign(project(X, clf))
 

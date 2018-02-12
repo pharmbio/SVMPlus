@@ -3,6 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="71172aef-9f4d-465c-8e53-ca774b7a2d81" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change beforePath="$PROJECT_DIR$/imageData.py" afterPath="$PROJECT_DIR$/imageData.py" />
+      <change beforePath="$PROJECT_DIR$/sigDesc.py" afterPath="$PROJECT_DIR$/sigDesc.py" />
       <change beforePath="$PROJECT_DIR$/svmOpt.py" afterPath="$PROJECT_DIR$/svmOpt.py" />
       <change beforePath="$PROJECT_DIR$/svmPlusOpt.py" afterPath="$PROJECT_DIR$/svmPlusOpt.py" />
       <change beforePath="$PROJECT_DIR$/svmUtils.py" afterPath="$PROJECT_DIR$/svmUtils.py" />
@@ -19,8 +21,8 @@
       <file leaf-file-name="svmPlusOpt.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/svmPlusOpt.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="212">
-              <caret line="104" column="11" lean-forward="false" selection-start-line="104" selection-start-column="11" selection-end-line="104" selection-end-column="11" />
+            <state relative-caret-position="3168">
+              <caret line="83" column="4" lean-forward="false" selection-start-line="81" selection-start-column="4" selection-end-line="83" selection-end-column="4" />
               <folding>
                 <element signature="e#67#101#0" expanded="true" />
               </folding>
@@ -28,47 +30,49 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="sigDesc.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/sigDesc.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="304">
-              <caret line="68" column="0" lean-forward="false" selection-start-line="64" selection-start-column="4" selection-end-line="68" selection-end-column="0" />
-              <folding>
-                <element signature="e#0#18#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="simulatedData.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/simulatedData.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="322">
-              <caret line="17" column="23" lean-forward="true" selection-start-line="17" selection-start-column="23" selection-end-line="17" selection-end-column="23" />
-              <folding>
-                <element signature="e#0#18#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="twodim_base.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../env/lib/python3.6/site-packages/numpy/lib/twodim_base.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3979">
-              <caret line="179" column="0" lean-forward="false" selection-start-line="179" selection-start-column="0" selection-end-line="179" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="svmUtils.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/svmUtils.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="212">
-              <caret line="87" column="18" lean-forward="false" selection-start-line="87" selection-start-column="18" selection-end-line="87" selection-end-column="18" />
+            <state relative-caret-position="1892">
+              <caret line="48" column="0" lean-forward="false" selection-start-line="48" selection-start-column="0" selection-end-line="48" selection-end-column="0" />
               <folding>
                 <element signature="e#0#34#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="sigDesc.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/sigDesc.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="680">
+              <caret line="133" column="57" lean-forward="false" selection-start-line="133" selection-start-column="57" selection-end-line="133" selection-end-column="57" />
+              <folding>
+                <element signature="e#0#18#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="simulatedData.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/simulatedData.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="3036">
+              <caret line="69" column="0" lean-forward="false" selection-start-line="65" selection-start-column="0" selection-end-line="69" selection-end-column="0" />
+              <folding>
+                <element signature="e#0#18#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="imageData.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/imageData.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1496">
+              <caret line="38" column="3" lean-forward="false" selection-start-line="38" selection-start-column="3" selection-end-line="38" selection-end-column="3" />
+              <folding>
+                <element signature="e#37#77#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -77,8 +81,8 @@
       <file leaf-file-name="svmOpt.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/svmOpt.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="212">
-              <caret line="95" column="18" lean-forward="false" selection-start-line="95" selection-start-column="18" selection-end-line="95" selection-end-column="18" />
+            <state relative-caret-position="696">
+              <caret line="81" column="19" lean-forward="false" selection-start-line="81" selection-start-column="19" selection-end-line="81" selection-end-column="19" />
               <folding>
                 <element signature="e#62#96#0" expanded="true" />
               </folding>
@@ -89,7 +93,7 @@
       <file leaf-file-name="testSVMPlus.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/testSVMPlus.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="437">
+            <state relative-caret-position="836">
               <caret line="24" column="37" lean-forward="false" selection-start-line="22" selection-start-column="4" selection-end-line="24" selection-end-column="37" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
@@ -133,6 +137,10 @@
       <find>,,</find>
       <find>predi</find>
       <find>'sv'</find>
+      <find>kernel</find>
+      <find>prohe</find>
+      <find>out of</find>
+      <find>nFeatures</find>
     </findStrings>
     <replaceStrings>
       <replace>plt</replace>
@@ -158,12 +166,12 @@
         <option value="$PROJECT_DIR$/images/sigDesc.py" />
         <option value="$PROJECT_DIR$/circleSvmExample.py" />
         <option value="$PROJECT_DIR$/splitExperiment.py" />
-        <option value="$PROJECT_DIR$/sigDesc.py" />
-        <option value="$PROJECT_DIR$/imageData.py" />
-        <option value="$PROJECT_DIR$/svmPlusOpt.py" />
-        <option value="$PROJECT_DIR$/svmOpt.py" />
-        <option value="$PROJECT_DIR$/svmUtils.py" />
         <option value="$PROJECT_DIR$/simulatedData.py" />
+        <option value="$PROJECT_DIR$/svmPlusOpt.py" />
+        <option value="$PROJECT_DIR$/svmUtils.py" />
+        <option value="$PROJECT_DIR$/svmOpt.py" />
+        <option value="$PROJECT_DIR$/imageData.py" />
+        <option value="$PROJECT_DIR$/sigDesc.py" />
       </list>
     </option>
   </component>
@@ -225,7 +233,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.simulatedData">
+  <component name="RunManager" selected="Python.sigDesc">
     <configuration name="imageData" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -325,9 +333,9 @@
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Python.simulatedData" />
+        <item index="0" class="java.lang.String" itemvalue="Python.sigDesc" />
         <item index="1" class="java.lang.String" itemvalue="Python.imageData" />
-        <item index="2" class="java.lang.String" itemvalue="Python.sigDesc" />
+        <item index="2" class="java.lang.String" itemvalue="Python.simulatedData" />
         <item index="3" class="java.lang.String" itemvalue="Python.splitExperiment" />
         <item index="4" class="java.lang.String" itemvalue="Python.testSVMPlus" />
       </list>
@@ -350,19 +358,19 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="57" width="1837" height="1055" extended-state="6" />
+    <frame x="0" y="57" width="3674" height="2131" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32280892" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32661948" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32969433" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32713348" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39715537" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -555,13 +563,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/imageData.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="115">
-          <caret line="5" column="24" lean-forward="false" selection-start-line="5" selection-start-column="24" selection-end-line="5" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/DescriptorDataset/fileDetails.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -569,17 +570,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../env/lib/python3.6/site-packages/numpy/lib/twodim_base.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3979">
-          <caret line="179" column="0" lean-forward="false" selection-start-line="179" selection-start-column="0" selection-end-line="179" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/testSVMPlus.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="437">
+        <state relative-caret-position="836">
           <caret line="24" column="37" lean-forward="false" selection-start-line="22" selection-start-column="4" selection-end-line="24" selection-end-column="37" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
@@ -591,54 +584,70 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="193">
           <caret line="1179" column="0" lean-forward="false" selection-start-line="1179" selection-start-column="0" selection-end-line="1179" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sigDesc.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="304">
-          <caret line="68" column="0" lean-forward="false" selection-start-line="64" selection-start-column="4" selection-end-line="68" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/svmPlusOpt.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="212">
-          <caret line="104" column="11" lean-forward="false" selection-start-line="104" selection-start-column="11" selection-end-line="104" selection-end-column="11" />
-          <folding>
-            <element signature="e#67#101#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/svmUtils.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="212">
-          <caret line="87" column="18" lean-forward="false" selection-start-line="87" selection-start-column="18" selection-end-line="87" selection-end-column="18" />
+        <state relative-caret-position="1892">
+          <caret line="48" column="0" lean-forward="false" selection-start-line="48" selection-start-column="0" selection-end-line="48" selection-end-column="0" />
           <folding>
             <element signature="e#0#34#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/svmPlusOpt.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3168">
+          <caret line="83" column="4" lean-forward="false" selection-start-line="81" selection-start-column="4" selection-end-line="83" selection-end-column="4" />
+          <folding>
+            <element signature="e#67#101#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../env/lib/python3.6/site-packages/numpy/lib/twodim_base.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="504">
+          <caret line="179" column="0" lean-forward="false" selection-start-line="179" selection-start-column="0" selection-end-line="179" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/simulatedData.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3036">
+          <caret line="69" column="0" lean-forward="false" selection-start-line="65" selection-start-column="0" selection-end-line="69" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/imageData.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1496">
+          <caret line="38" column="3" lean-forward="false" selection-start-line="38" selection-start-column="3" selection-end-line="38" selection-end-column="3" />
+          <folding>
+            <element signature="e#37#77#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/svmOpt.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="212">
-          <caret line="95" column="18" lean-forward="false" selection-start-line="95" selection-start-column="18" selection-end-line="95" selection-end-column="18" />
+        <state relative-caret-position="696">
+          <caret line="81" column="19" lean-forward="false" selection-start-line="81" selection-start-column="19" selection-end-line="81" selection-end-column="19" />
           <folding>
             <element signature="e#62#96#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/simulatedData.py">
+    <entry file="file://$PROJECT_DIR$/sigDesc.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="322">
-          <caret line="17" column="23" lean-forward="true" selection-start-line="17" selection-start-column="23" selection-end-line="17" selection-end-column="23" />
+        <state relative-caret-position="680">
+          <caret line="133" column="57" lean-forward="false" selection-start-line="133" selection-start-column="57" selection-end-line="133" selection-end-column="57" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
           </folding>

@@ -31,9 +31,9 @@ a = -1
 b = 1
 
 
-def project(w, b, X, clf):
-    if w is not None:
-        return np.dot(X, w) + b
+def project(X, clf):
+    if clf['w'] is not None:
+        return np.dot(X, clf['w']) + clf['b']
     else:
         y_predict = np.zeros(len(X))
         for i in range(len(X)):
@@ -41,12 +41,11 @@ def project(w, b, X, clf):
             for a, sv_y, sv in zip(clf['alpha'], clf['sv_y'], clf['sv_x']):
                 s += a * sv_y * clf['kernel'](X[i], sv, clf['kernelParam'])
             y_predict[i] = s
-        return y_predict + b
+        return y_predict + clf['b']
 
 
-# to predict
 def predict(X, clf):
-    return np.sign(project(clf['w'], clf['b'], X, clf))
+    return np.sign(project(X, clf))
 
 
 # for plotting margin

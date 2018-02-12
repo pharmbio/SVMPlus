@@ -52,7 +52,8 @@ def svmOptProb(X, y, kernel="linear", C=None, param = None):
 
     #alpha = np.array(sol['x'])
     # Support vectors have non zero lagrange multipliers
-    sv = alpha > 2e-5 #TODO: define some tolerance
+    sv = alpha > 1e-4  # tolerance
+    print("%d support vectors out of %d points" % (len(sv), nSamples))
     ind = np.arange(len(alpha))[sv]
     alpha = alpha[sv]
     sv_x = X[sv]
@@ -74,7 +75,6 @@ def svmOptProb(X, y, kernel="linear", C=None, param = None):
         w = None
 
     clf = {}
-    clf['K'] = K
     clf['sv_x'] = sv_x
     clf['sv_y'] = sv_y
     clf['alpha'] = alpha

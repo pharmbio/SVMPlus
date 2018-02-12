@@ -127,18 +127,18 @@ def readDetailsDescriptorFiles():
 
 #global Variables: descriptor file names
 listFileName = ["DescriptorDataset/sr-mmp_nosalt.sdf.std_nodupl_class.sdf_MACCS_166bit.csv",
-    "DescriptorDataset/sr-mmp_nosalt.sdf.std_nodupl_class.sdf_toplogical.csv",
+    "DescriptorDataset/sr-mmp_nosalt.sdf.std_nodupl_class.sdf_topological.csv",
     "DescriptorDataset/smiles_cas_N6512.sdf.std_class.sdf_MACCS_166bit.csv",
-    "DescriptorDataset/smiles_cas_N6512.sdf.std_class.sdf_toplogical.csv",
+    "DescriptorDataset/smiles_cas_N6512.sdf.std_class.sdf_topological.csv",
     "DescriptorDataset/bursi_nosalts_molsign.sdf.txt_MACCS_166bit.csv",
-    "DescriptorDataset/bursi_nosalts_molsign.sdf.txt_toplogical.csv" ]
+    "DescriptorDataset/bursi_nosalts_molsign.sdf.txt_topological.csv" ]
 
 
 if __name__ == "__main__":
-    #readDetailsDescriptorFiles()
+    readDetailsDescriptorFiles()
     #for fileName in listFileName:
     #    runSVMSigDescFile(fileName)
-    runSVMSigDescFile(listFileName[0])
+    #runSVMSigDescFile(listFileName[0])
     #compareSVMAndSVMPlus(listFileName[0], listFileName[1])
     #CompareSVMAndSVMPlus(listFileName[2], listFileName[3])
     #CompareSVMAndSVMPlus(listFileName[4], listFileName[5])
