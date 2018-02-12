@@ -97,7 +97,7 @@ def plot_contour(X, y, clf, fileName = None):
 
     X1, X2 = np.meshgrid(np.linspace(-grid1, grid2, 50), np.linspace(-grid1, grid2, 50))
     X = np.array([[x1, x2] for x1, x2 in zip(np.ravel(X1), np.ravel(X2))])
-    Z = project(clf['w'], clf['b'], X, clf).reshape(X1.shape)
+    Z = project(X, clf).reshape(X1.shape)
     plt.contour(X1, X2, Z, [0.0], colors='k', linewidths=1, origin='lower')
     plt.contour(X1, X2, Z + 1, [0.0], colors='grey', linewidths=1, origin='lower')
     plt.contour(X1, X2, Z - 1, [0.0], colors='grey', linewidths=1, origin='lower')

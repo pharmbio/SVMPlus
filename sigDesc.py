@@ -54,13 +54,13 @@ def loadDataset(fileName, split=False, returnIndices = False):
 
 
 #run SVM for sign descriptor file
-def runSVMSigDescFile(fileName, C = 100):
+def runSVMSigDescFile(fileName, C = 10):
     X_train, X_test, y_train, y_test =  loadDataset(fileName, split = True, returnIndices = False)
     print(X_train.shape)
     print(X_test.shape)
     # fit svm model
     svm_clf = svmPlus.svmPlusOpt(X_train, y_train, XStar=None, C=C, kernel="rbf",
-                             kernelParam=.001) # standard SVM
+                             kernelParam=.01) # standard SVM
 
     y_predict = svmPlus.predict(X_test, svm_clf)
     correct = np.sum(y_predict == y_test)
@@ -105,9 +105,9 @@ def compareSVMAndSVMPlus(fileName1, fileName2):
     print("%d out of %d predictions correct" % (correct, len(y_predict)))
     '''
     # compute prediction accuracy using SVM+ for file1, and file2 as a priv-info
-    clf = svmPlus.svmPlusOpt(X_train, y_train, XStar=XStar_train, C=100, kernel="rbf",
-                             kernelParam=0.001, kernelStar="rbf", kernelStarParam=0.001,
-                             gamma=0.5) #linear kernel as of now
+    clf = svmPlus.svmPlusOpt(X_train, y_train, XStar=XStar_train, C=.01, kernel="rbf",
+                             kernelParam=0.01, kernelStar="rbf", kernelStarParam=0.01,
+                             gamma=0.001) #linear kernel as of now
     y_predict = svmPlus.predict(X_test, clf)
     correct = np.sum(y_predict == y_test)
     print("Prediction accuracy using SVM+ for ", fileName1, fileName2)
