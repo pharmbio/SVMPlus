@@ -66,20 +66,21 @@ def svmPlusOpt(X, y, XStar=None, C=10, kernel="linear", kernelParam = None,
             -C / float(2 * gamma)) - \
         np.concatenate((np.ones((1, nSamples)), np.zeros((1, nSamples))), axis=1)
     q = np.transpose(Q)
-
+    '''
     print(P.shape)
     print(Q.shape)
     print(A.shape)
     print(G.shape)
     print(h.shape)
     print(b.shape)
+    '''
     sol = solvers.qp(matrix(P, tc='d'), matrix(q, tc='d'), matrix(G, tc='d'), matrix(h, tc='d'), matrix(A, tc='d'),
                      matrix(b, tc='d'))
     # Lagrange multipliers
     alpha = np.ravel(sol['x'][0:nSamples])
 
     # Support vectors have non zero lagrange multipliers
-    sv = alpha > 1e-3 # tolerance
+    sv = alpha > 1e-5 # tolerance
     ind = np.arange(len(alpha))[sv]
     alpha = alpha[sv]
     print("%d support vectors out of %d points" % (len(alpha), nSamples))

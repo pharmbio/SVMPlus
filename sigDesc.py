@@ -5,7 +5,9 @@ import csv as csv
 from sklearn.model_selection import train_test_split
 from numpy.random import RandomState
 import math
+from sklearn import svm
 
+# to make sure there are no missing values
 def getIndicesWithMissingValues(fileName):
     data = []
     # Read the dataset from given file
@@ -28,6 +30,7 @@ def getIndicesWithMissingValues(fileName):
 
 
 
+# Load the dataset with given file name, and split it into train and test set
 def loadDataset(fileName, split=False, returnIndices = False):
     data = []
     # Read the dataset
@@ -46,9 +49,9 @@ def loadDataset(fileName, split=False, returnIndices = False):
 
     if split:
         if returnIndices:
-            return train_test_split(X, y, range(n), test_size=0.2, random_state = RandomState())
+            return train_test_split(X, y, range(n), test_size=0.9, random_state = 9)
         else:
-            return train_test_split(X, y, test_size=0.2, random_state=RandomState())
+            return train_test_split(X, y, test_size=0.8, random_state=RandomState())
     else:
         return X, y
 
@@ -87,29 +90,37 @@ def compareSVMAndSVMPlus(fileName1, fileName2):
     else:
         print("different split for both the files")
 
-    '''
-    # compute prediction accuracy using SVM for file1
-    svm_clf = svmPlus.svmPlusOpt(X_train, y_train, XStar=None, C=10, kernel="linear",
-                                 kernelParam=None)  # standard SVM
-    y_predict = svmPlus.predict(X_test, svm_clf)
-    correct = np.sum(y_predict == y_test)
-    print("Prediction accuracy using SVM for ", fileName1)
-    print("%d out of %d predictions correct" % (correct, len(y_predict)))
 
     # compute prediction accuracy using SVM for file1
-    svm_clf = svmPlus.svmPlusOpt(XStar_train, yStar_train, XStar=None, C=10, kernel="linear",
-                                 kernelParam=None)  # standard SVM
-    y_predict = svmPlus.predict(XStar_test, svm_clf)
-    correct = np.sum(y_predict == yStar_test)
+    #svm_clf = svmPlus.svmPlusOpt(X_train, y_train, XStar=None, C=10, kernel="linear",
+    #                             kernelParam=None)  # standard SVM
+    #y_predict = svmPlus.predict(X_test, svm_clf)
+    #correct = np.sum(y_predict == y_test)
+    #print("Prediction accuracy using SVM for ", fileName1)
+    #print("%d out of %d predictions correct" % (correct, len(y_predict)))
+    '''
+    clf = svm.SVC(gamma=.00001, C=100.)
+    clf.fit(X_train, y_train)
+    print(len(clf.support_), "support vectors")
+    y_predict = clf.predict(X_test[:1000])
+    correct = np.sum(y_predict == y_test[:1000])
+    print("Prediction accuracy using SVM for ", fileName1)
+    print("%d out of %d predictions correct" % (correct, len(y_predict)))
+    
+    # compute prediction accuracy using SVM for file1
+    svm_clf = svmPlus.svmPlusOpt(XStar_train, yStar_train, XStar=None, C=100, kernel="rbf",
+                                 kernelParam=.00001)  # standard SVM
+    y_predict = svmPlus.predict(XStar_test[:1000], svm_clf)
+    correct = np.sum(y_predict == yStar_test[:1000])
     print("Prediction accuracy using SVM for ", fileName2)
     print("%d out of %d predictions correct" % (correct, len(y_predict)))
     '''
     # compute prediction accuracy using SVM+ for file1, and file2 as a priv-info
-    clf = svmPlus.svmPlusOpt(X_train, y_train, XStar=XStar_train, C=.01, kernel="rbf",
-                             kernelParam=0.01, kernelStar="rbf", kernelStarParam=0.01,
-                             gamma=0.001) #linear kernel as of now
-    y_predict = svmPlus.predict(X_test, clf)
-    correct = np.sum(y_predict == y_test)
+    clf = svmPlus.svmPlusOpt(X_train, y_train, XStar=XStar_train, C=100, kernel="rbf",
+                             kernelParam=0.00001, kernelStar="rbf", kernelStarParam=0.000001,
+                             gamma=0.0001) #linear kernel as of now
+    y_predict = svmPlus.predict(X_test[:1000], clf)
+    correct = np.sum(y_predict == y_test[:1000])
     print("Prediction accuracy using SVM+ for ", fileName1, fileName2)
     print("%d out of %d predictions correct" % (correct, len(y_predict)))
 
@@ -135,11 +146,11 @@ listFileName = ["DescriptorDataset/sr-mmp_nosalt.sdf.std_nodupl_class.sdf_MACCS_
 
 
 if __name__ == "__main__":
-    readDetailsDescriptorFiles()
+    #readDetailsDescriptorFiles()
     #for fileName in listFileName:
     #    runSVMSigDescFile(fileName)
     #runSVMSigDescFile(listFileName[0])
-    #compareSVMAndSVMPlus(listFileName[0], listFileName[1])
+    compareSVMAndSVMPlus(listFileName[0], listFileName[1])
     #CompareSVMAndSVMPlus(listFileName[2], listFileName[3])
     #CompareSVMAndSVMPlus(listFileName[4], listFileName[5])
     #runSVMSigDescFile(listFileName[1], C = 100)

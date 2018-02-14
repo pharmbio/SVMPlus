@@ -7,6 +7,7 @@ import svmUtils as utils
 from sklearn import svm
 
 digits = load_digits()
+print(digits.data.__class__)
 print(digits.data.shape)
 
 # to plot image
