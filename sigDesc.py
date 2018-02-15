@@ -49,26 +49,41 @@ def loadDataset(fileName, split=False, returnIndices = False):
 
     if split:
         if returnIndices:
-            return train_test_split(X, y, range(n), test_size=0.9, random_state = 9)
+            return train_test_split(X, y, range(n), test_size=0.4, random_state=RandomState())
         else:
-            return train_test_split(X, y, test_size=0.8, random_state=RandomState())
+            return train_test_split(X, y, test_size=0.4, random_state=RandomState())
     else:
         return X, y
 
 
 #run SVM for sign descriptor file
 def runSVMSigDescFile(fileName, C = 10):
-    X_train, X_test, y_train, y_test =  loadDataset(fileName, split = True, returnIndices = False)
-    print(X_train.shape)
-    print(X_test.shape)
-    # fit svm model
-    svm_clf = svmPlus.svmPlusOpt(X_train, y_train, XStar=None, C=C, kernel="rbf",
-                             kernelParam=.01) # standard SVM
+    paramC = np.linspace(1, 100, 20)
+    paramGama = np.linspace(.1, .00001, 20)
 
-    y_predict = svmPlus.predict(X_test, svm_clf)
-    correct = np.sum(y_predict == y_test)
-    print("Prediction accuracy using SVM for ", fileName)
-    print("%d out of %d predictions correct" % (correct, len(y_predict)))
+    X_train, X_test, y_train, y_test =  loadDataset(fileName, split = True, returnIndices = False)
+    ofile = open('paramGridResults/' + fileName[18:-4], "a")
+    ofile.write("Size of the train set"+ str(X_train.shape[0])+ "\n")
+    ofile.write("Size of the test set"+ str(X_test.shape[0])+ "\n")
+
+    x =.33333
+    x = round(x,3)
+    print(x)
+    #print(X_train.shape)
+    #print(X_test.shape)
+    # fit svm model
+    for i in range(20):
+        for j in range(20):
+            svm_clf = svmPlus.svmPlusOpt(X_train, y_train, XStar=None, C = paramC[i], kernel="rbf",
+                                     kernelParam = paramGama[j]) # standard SVM
+            y_predict = svmPlus.predict(X_test, svm_clf)
+            correct = np.sum(y_predict == y_test)
+            print("Prediction accuracy using SVM for ", fileName)
+            print("%d out of %d predictions correct" % (correct, len(y_predict)))
+            predAcc = round(correct/len(y_predict), 3)
+            ofile.write("param C = %f, gamma = %f, pred accuracy = %f \n" % (paramC[i],paramGama[j],predAcc))
+
+    ofile.close()
 
 #run SVM+ for sign descriptor files
 def compareSVMAndSVMPlus(fileName1, fileName2):
@@ -98,7 +113,7 @@ def compareSVMAndSVMPlus(fileName1, fileName2):
     #correct = np.sum(y_predict == y_test)
     #print("Prediction accuracy using SVM for ", fileName1)
     #print("%d out of %d predictions correct" % (correct, len(y_predict)))
-    '''
+
     clf = svm.SVC(gamma=.00001, C=100.)
     clf.fit(X_train, y_train)
     print(len(clf.support_), "support vectors")
@@ -114,10 +129,10 @@ def compareSVMAndSVMPlus(fileName1, fileName2):
     correct = np.sum(y_predict == yStar_test[:1000])
     print("Prediction accuracy using SVM for ", fileName2)
     print("%d out of %d predictions correct" % (correct, len(y_predict)))
-    '''
+
     # compute prediction accuracy using SVM+ for file1, and file2 as a priv-info
     clf = svmPlus.svmPlusOpt(X_train, y_train, XStar=XStar_train, C=100, kernel="rbf",
-                             kernelParam=0.00001, kernelStar="rbf", kernelStarParam=0.000001,
+                             kernelParam=0.00001, kernelStar="rbf", kernelStarParam=0.00001,
                              gamma=0.0001) #linear kernel as of now
     y_predict = svmPlus.predict(X_test[:1000], clf)
     correct = np.sum(y_predict == y_test[:1000])
@@ -149,9 +164,9 @@ if __name__ == "__main__":
     #readDetailsDescriptorFiles()
     #for fileName in listFileName:
     #    runSVMSigDescFile(fileName)
-    #runSVMSigDescFile(listFileName[0])
-    compareSVMAndSVMPlus(listFileName[0], listFileName[1])
-    #CompareSVMAndSVMPlus(listFileName[2], listFileName[3])
-    #CompareSVMAndSVMPlus(listFileName[4], listFileName[5])
-    #runSVMSigDescFile(listFileName[1], C = 100)
+    runSVMSigDescFile(listFileName[0])
+    #compareSVMAndSVMPlus(listFileName[0], listFileName[1])
+    #compareSVMAndSVMPlus(listFileName[2], listFileName[3])
+    #compareSVMAndSVMPlus(listFileName[4], listFileName[5])
+
 

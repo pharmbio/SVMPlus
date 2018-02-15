@@ -88,7 +88,7 @@ def testMNIST():
     print(nClass2)
 
     #train_data, y_train = mndata.load_training()
-    nSample = 50
+    nSample = 20
     X_train = np.vstack((dataClass1[:nSample], dataClass2[:nSample]))
     X_test = np.vstack((dataClass1[nSample:], dataClass2[nSample:]))
     y_train = np.concatenate((np.ones(nSample), -np.ones(nSample)))
@@ -124,8 +124,6 @@ def resizeMNISTData():
         a.append(newRow)
     ifile.close()
     X = np.array([ x for x in a]).astype(float)
-    print(X.shape)
-
     #resizeImage(X[0])
     #for i in range(len(X)):
     X_resized = np.array([resizeImage(x) for x in X])
@@ -210,7 +208,7 @@ def testSVMPlusMNISTDataset():
     #nClass2 = len(dataClass2)
 
     # 50+50 for training
-    nSample = 50
+    nSample = 20
     testSize = 933
     X_train = np.vstack((dataClass1[:nSample], dataClass2[:nSample]))
     X_test = np.vstack((dataClass1[nSample:(nSample+testSize)], dataClass2[nSample:(nSample+testSize)]))
@@ -256,5 +254,6 @@ def testSVMPlusMNISTDataset():
     print("Prediction accuracy of SVM+ on X using XStar as priv-info")
     print("number of test error = %d, test size = %d" %(len(y_predict) - correct, len(y_predict)))
 
-
+#preProcessMNISTData()
+#resizeMNISTData()
 testSVMPlusMNISTDataset()

@@ -3,3 +3,7 @@ __pycache__/
 *.pyc
 *.xml
 MNISTData/
+data/mnistData.csv
+DescriptorDataset/dataset_bursi.csr
+DescriptorDataset/dataset_mmp.csr
+DescriptorDataset/dataset_temp.csr
