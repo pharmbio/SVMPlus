@@ -1,0 +1,5 @@
+Size of the train set3905
+Size of the test set2604
+param C = 1.000000, gamma = 0.100000, pred accuracy = 0.810000 
+param C = 1.000000, gamma = 0.094737, pred accuracy = 0.810000 
+param C = 1.000000, gamma = 0.089475, pred accuracy = 0.808000 

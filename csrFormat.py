@@ -1,62 +1,55 @@
 import numpy as np
-import svmPlusOpt as svmPlus
-from cvxopt import matrix
 import csv as csv
+from scipy.sparse import csr_matrix
 from sklearn.model_selection import train_test_split
 from numpy.random import RandomState
-import math
-from sklearn import svm
-from scipy.sparse import csr_matrix
 
-def formatStr(nRow, strInput):
+def formatStr(strInput):
     p = strInput.find(":")
     colNo = strInput[:p]
     data = strInput[p+1:]
-    return [nRow, colNo, data]
+    return float(colNo), float(data)
 
 
 # to make sure there are no missing values
-def readCSRFile():
-    data = []
+def readCSRFile(fileName, split = False, returnIndices = False):
     # Read the dataset from given file
-    file = open("DescriptorDataset/dataset_cas_N6512.csr")
-    reader = csv.reader(file,  delimiter=' ')
-
+    file = open(fileName)
+    reader = csv.reader(file, delimiter = '\t')
     nRow = 0 # number of rows
-
     colList = []
     rowList = []
     dataList = []
+    labels = []
     for row in reader:
         # skip label
+        labels = labels + row[:1]
         row = row[1:]
-        newRow = [formatStr(nRow, val) if val else 0 for val in row]
-        #print(newRow)
-        rowList.append([x[0] for x in newRow])
-        colList.append([x[1] for x in newRow])
-        dataList.append([x[2] for x in newRow])
+        for val in row:
+            if val:
+                colNo, data = formatStr(val)
+                rowList.append(nRow)
+                colList.append(colNo)
+                dataList.append(data)
         nRow = nRow+1
     file.close()
-
-    colums = np.array([x for x in colList[0]]).flatten()
-    rows = np.array([x for x in rowList[0]]).flatten()
-    data = np.array([x for x in dataList[0]]).flatten()
-    for i in range(1,nRow):
-        colums = np.append(colums, np.array([x for x in colList[i]]).flatten())
-        rows = np.append(rows, np.array([x for x in rowList[i]]).flatten())
-        data = np.append(data, np.array([x for x in dataList[i]]).flatten())
-
-    print(len(colums))
-    print(len(rows))
-    print(len(data))
-    print(colums[0:10])
-    nFeatures = max(np.array(colums).astype(int))+1
-    print(nFeatures)
-    nSamples = nRow
-    print(nRow)
-    csMatrix = csr_matrix((np.array(data).astype(float), (np.array(rows).astype(int), np.array(colums).astype(int))))
+    y = np.array([x for x in labels]).astype(int) #np.array(labels).astype(int).T
+    columns = np.array(colList).astype(int)
+    rows = np.array(rowList).astype(int)
+    data = np.array(dataList)
+    csMatrix = csr_matrix((np.array(data).astype(float), (np.array(rows).astype(int), np.array(columns).astype(int))))
     X = csMatrix.toarray()
-    print(X.shape)
-    print(X[len(X)-1, :100])
+    if split:
+        if returnIndices:
+            return train_test_split(X, y, range(nRow), test_size=0.4, random_state=RandomState())
+        else:
+            return train_test_split(X, y, test_size=0.9, random_state=RandomState())
+    else:
+        return X, y
 
-readCSRFile()
+
+
+if __name__ == "__main__":
+    readCSRFile("DescriptorDataset/bursi_nosalts_molsign.sdf.txt_SVMLIGHT_Morgan_unhashed_radius_3.csv", split=True)
+    #readCSRFile("DescriptorDataset/smiles_cas_N6512.sdf.std_class.sdf_SVMLIGHT_Morgan_unhashed_radius_3.csv")
+    #readCSRFile("DescriptorDataset/sr-mmp_nosalt.sdf.std_nodupl_class.sdf_SVMLIGHT_Morgan_unhashed_radius_3.csv")
