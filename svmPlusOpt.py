@@ -83,7 +83,7 @@ def svmPlusOpt(X, y, XStar=None, C=10, kernel="linear", kernelParam = None,
     sv = alpha > 1e-5 # tolerance
     ind = np.arange(len(alpha))[sv]
     alpha = alpha[sv]
-    print("%d support vectors out of %d points" % (len(alpha), nSamples))
+    #print("%d support vectors out of %d points" % (len(alpha), nSamples))
     sv_x = X[sv]
     sv_y = y[sv]
 

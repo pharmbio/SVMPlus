@@ -8,6 +8,8 @@ def formatStr(strInput):
     p = strInput.find(":")
     colNo = strInput[:p]
     data = strInput[p+1:]
+    if(colNo == "0"):
+        print()
     return float(colNo), float(data)
 
 
@@ -43,13 +45,13 @@ def readCSRFile(fileName, split = False, returnIndices = False):
         if returnIndices:
             return train_test_split(X, y, range(nRow), test_size=0.4, random_state=RandomState())
         else:
-            return train_test_split(X, y, test_size=0.9, random_state=RandomState())
+            return train_test_split(X, y, test_size=0.4, random_state=RandomState())
     else:
         return X, y
 
 
 
 if __name__ == "__main__":
-    readCSRFile("DescriptorDataset/bursi_nosalts_molsign.sdf.txt_SVMLIGHT_Morgan_unhashed_radius_3.csv", split=True)
-    #readCSRFile("DescriptorDataset/smiles_cas_N6512.sdf.std_class.sdf_SVMLIGHT_Morgan_unhashed_radius_3.csv")
-    #readCSRFile("DescriptorDataset/sr-mmp_nosalt.sdf.std_nodupl_class.sdf_SVMLIGHT_Morgan_unhashed_radius_3.csv")
+    #X, y = readCSRFile("DescriptorDataset/bursi_nosalts_molsign.sdf.txt_SVMLIGHT_Morgan_unhashed_radius_3.csv")
+    #X,y = readCSRFile("DescriptorDataset/smiles_cas_N6512.sdf.std_class.sdf_SVMLIGHT_Morgan_unhashed_radius_3.csv")
+    X, y = readCSRFile("DescriptorDataset/sr-mmp_nosalt.sdf.std_nodupl_class.sdf_SVMLIGHT_Morgan_unhashed_radius_3.csv")
