@@ -43,9 +43,9 @@ def readCSRFile(fileName, split = False, returnIndices = False):
     X = csMatrix.toarray()
     if split:
         if returnIndices:
-            return train_test_split(X, y, range(nRow), test_size=0.4, random_state=RandomState())
+            return train_test_split(X, y, range(nRow), test_size=0.2, stratify = y, random_state = 7)
         else:
-            return train_test_split(X, y, test_size=0.4, random_state=RandomState())
+            return train_test_split(X, y, test_size=0.2, stratify = y, random_state = 7)
     else:
         return X, y
 

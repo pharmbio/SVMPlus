@@ -8,6 +8,8 @@ import math
 from sklearn import svm
 import csrFormat as csr
 import sys
+from sklearn.model_selection import StratifiedKFold
+
 
 # to make sure there are no missing values
 def getIndicesWithMissingValues(fileName):
@@ -51,35 +53,62 @@ def loadDataset(fileName, split=False, returnIndices = False):
 
     if split:
         if returnIndices:
-            return train_test_split(X, y, range(n), test_size=0.4, random_state=RandomState())
+            return train_test_split(X, y, range(n), test_size=0.2, stratify = y, random_state = 7)
         else:
-            return train_test_split(X, y, test_size=0.4, random_state=RandomState())
+            return train_test_split(X, y, test_size=0.2, stratify = y, random_state = 7)
     else:
         return X, y
 
 
-#run SVM for sign descriptor file
-def runSVMSigDescFile(fileName, C = 10):
-    paramC = np.linspace(1, 100, 20)
-    paramGama = np.linspace(.1, .00001, 20)
+# Parameter estimation using grid search with cross-validation
+def gridSearchWithCV(fileName):
+    paramC = [.001, .01, .1, 1, 100, 1000]
+    paramGama = [1e-6, 1e-5, 1e-4, 1e-3, 1e-2, .1]
 
-    X_train, X_test, y_train, y_test =  loadDataset(fileName, split = True, returnIndices = False)
+    X, X_test, y, y_test =  loadDataset(fileName, split = True) # train(80):test(20) split
+
+    cv = StratifiedKFold(n_splits = 5)
+    cv_split = cv.split(X, y)
+
+    folds = [[train_index, test_index] for train_index, test_index in cv.split(X, y)]
+
     ofile = open('paramGridResults/' + fileName[18:-4], "a")
-    ofile.write("Size of the train set"+ str(X_train.shape[0])+ "\n")
+    ofile.write("Size of the train set"+ str(X.shape[0])+ "\n")
     ofile.write("Size of the test set"+ str(X_test.shape[0])+ "\n")
 
-    # fit svm model
-    for i in range(20):
-        for j in range(20):
-            clf = svm.SVC(gamma = paramGama[j], C = paramC[i])
-            clf.fit(X_train, y_train)
-            y_predict = clf.predict(X_test)
-            correct = np.sum(y_predict == y_test)
-            print("Prediction accuracy using SVM for ", fileName)
-            print("%d out of %d predictions correct" % (correct, len(y_predict)))
-            predAcc = round(correct/len(y_predict), 3)
-            ofile.write("param C = %f, gamma = %f, pred accuracy = %f \n" % (paramC[i],paramGama[j],predAcc))
+    predAcc = []
+    index = []
+    # Cross validate
+    for i in range(len(paramC)):
+        for j in range(len(paramGama)):
+            acc = 0
+            for fold in folds:
+                clf = svm.SVC(gamma = paramGama[j], C = paramC[i])
+                clf.fit(X[fold[0]], y[fold[0]])
+                y_predict = clf.predict(X[fold[1]])
+                correct = np.sum(y_predict == y[fold[1]])
+                #print("%d out of %d predictions correct" % (correct, len(y_predict)))
+                acc = acc + (correct/len(y_predict))
 
+            acc = acc/5
+            #print(acc)
+            predAcc.append(acc)
+            index.append([i,j])
+            ofile.write("param C = %f, gamma = %f, mean pred accuracy = %f \n" % (paramC[i], paramGama[j], acc))
+    #print(predAcc)
+    selectedIndex = np.argmax(predAcc)
+    #print(selectedIndex)
+    #print(predAcc[selectedIndex])
+    C = paramC[index[selectedIndex][0]]
+    gamma = paramGama[index[selectedIndex][1]]
+
+    #Fit the SVM on whole training set and calculate results on test set
+    clf = svm.SVC(gamma=gamma, C=C)
+    clf.fit(X, y)
+    y_predict = clf.predict(X_test)
+    correct = np.sum(y_predict == y_test)
+    predAcc = round(correct / len(y_predict), 3)
+    print("param C = %f, gamma = %f, pred accuracy = %f \n" % (C, gamma, predAcc))
     ofile.close()
 
 #run SVM+ for sign descriptor files
@@ -200,7 +229,7 @@ fingerPrintFiles = ["DescriptorDataset/sr-mmp_nosalt.sdf.std_nodupl_class.sdf_SV
 
 
 #run SVM for finger print descriptor file
-def svmOnFingDescFile(fileName, C = 1000, gamma = .01):
+def svmOnFingDescFile(fileName, C = 100, gamma = .01):
     X_train, X_test, y_train, y_test =  csr.readCSRFile(fileName, split = True)
     # fit svm model
     svm_clf = svmPlus.svmPlusOpt(X_train, y_train, XStar=None, C = C, kernel="rbf",
@@ -244,7 +273,7 @@ if __name__ == "__main__":
     #for fileName in listFileName:
     #    runSVMSigDescFile(fileName)
     #svmOnFingDescFile(fingerPrintFiles[0])
-    svmOnFingDescFile(fingerPrintFiles[0])
+    gridSearchWithCV(listFileName[0])
     #compareSVMAndSVMPlus(listFileName[0], listFileName[1], fingerPrintFiles[0])
     #compareSVMAndSVMPlus(listFileName[2], listFileName[3], fingerPrintFiles[1])
     #compareSVMAndSVMPlus(listFileName[4], listFileName[5], fingerPrintFiles[2])
