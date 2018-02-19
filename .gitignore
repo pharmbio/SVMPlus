@@ -6,3 +6,4 @@ MNISTData/
 data/mnistData.csv
 DescriptorDataset/
 paramGridResults/
+printTables

@@ -9,7 +9,7 @@ from sklearn import svm
 import csrFormat as csr
 import sys
 from sklearn.model_selection import StratifiedKFold
-
+from sklearn.metrics import roc_curve, auc
 
 # to make sure there are no missing values
 def getIndicesWithMissingValues(fileName):
@@ -63,44 +63,46 @@ def loadDataset(fileName, split=False, returnIndices = False):
 # Parameter estimation using grid search with cross-validation
 def gridSearchWithCV(fileName):
     paramC = [.001, .01, .1, 1, 100, 1000]
-    paramGama = [1e-6, 1e-5, 1e-4, 1e-3, 1e-2, .1]
+    paramGamma = [1e-6, 1e-5, 1e-4, 1e-3, 1e-2, .1]
 
     X, X_test, y, y_test =  loadDataset(fileName, split = True) # train(80):test(20) split
+    #X, X_test, y, y_test = csr.readCSRFile(fileName, split=True)
 
     cv = StratifiedKFold(n_splits = 5)
-    cv_split = cv.split(X, y)
-
     folds = [[train_index, test_index] for train_index, test_index in cv.split(X, y)]
-
+    #record the results in a file
     ofile = open('paramGridResults/' + fileName[18:-4], "a")
     ofile.write("Size of the train set"+ str(X.shape[0])+ "\n")
     ofile.write("Size of the test set"+ str(X_test.shape[0])+ "\n")
 
     predAcc = []
     index = []
+    rocAUC = []
     # Cross validate
     for i in range(len(paramC)):
-        for j in range(len(paramGama)):
-            acc = 0
+        for j in range(len(paramGamma)):
+            accuracy = 0
+            areaUnderCurve = 0
             for fold in folds:
-                clf = svm.SVC(gamma = paramGama[j], C = paramC[i])
-                clf.fit(X[fold[0]], y[fold[0]])
+                clf = svm.SVC(gamma = paramGamma[j], C = paramC[i], probability=True)
+                y_prob = clf.fit(X[fold[0]], y[fold[0]]).predict_proba(X[fold[1]])
+                fpr, tpr, thresholds = roc_curve(y[fold[1]], y_prob[:, 1])
                 y_predict = clf.predict(X[fold[1]])
                 correct = np.sum(y_predict == y[fold[1]])
-                #print("%d out of %d predictions correct" % (correct, len(y_predict)))
-                acc = acc + (correct/len(y_predict))
+                accuracy = accuracy + (correct/len(y_predict))
+                areaUnderCurve = areaUnderCurve + auc(fpr, tpr)
 
-            acc = acc/5
-            #print(acc)
-            predAcc.append(acc)
+            print(i,j)
+            accuracy = accuracy / 5
+            areaUnderCurve= areaUnderCurve / 5
+            rocAUC.append(areaUnderCurve)
+            predAcc.append(accuracy)
             index.append([i,j])
-            ofile.write("param C = %f, gamma = %f, mean pred accuracy = %f \n" % (paramC[i], paramGama[j], acc))
-    #print(predAcc)
+            ofile.write("param C = %f, gamma = %f, mean pred accuracy = %f, mean AUC = %f \n" %
+                        (paramC[i], paramGamma[j], accuracy, areaUnderCurve))
     selectedIndex = np.argmax(predAcc)
-    #print(selectedIndex)
-    #print(predAcc[selectedIndex])
     C = paramC[index[selectedIndex][0]]
-    gamma = paramGama[index[selectedIndex][1]]
+    gamma = paramGamma[index[selectedIndex][1]]
 
     #Fit the SVM on whole training set and calculate results on test set
     clf = svm.SVC(gamma=gamma, C=C)
@@ -109,7 +111,24 @@ def gridSearchWithCV(fileName):
     correct = np.sum(y_predict == y_test)
     predAcc = round(correct / len(y_predict), 3)
     print("param C = %f, gamma = %f, pred accuracy = %f \n" % (C, gamma, predAcc))
+    ofile.write("param C = %f, gamma = %f, pred accuracy = %f \n" % (C, gamma, predAcc))
+
+    # select model based on AUC
+    selectedIndex = np.argmax(rocAUC)
+    C = paramC[index[selectedIndex][0]]
+    gamma = paramGamma[index[selectedIndex][1]]
+
+    # Fit the SVM on whole training set and calculate AUC for test set
+    clf = svm.SVC(gamma=gamma, C=C, probability=True)
+    y_prob = clf.fit(X, y).predict_proba(X_test)
+    fpr, tpr, thresholds = roc_curve(y_test, y_prob[:, 1])
+    finalAUC = auc(fpr, tpr)
+    print("param C = %f, gamma = %f, AUC = %f \n" % (C, gamma, finalAUC))
+    ofile.write("param C = %f, gamma = %f, AUC = %f \n" % (C, gamma, finalAUC))
+
     ofile.close()
+
+
 
 #run SVM+ for sign descriptor files
 def compareSVMAndSVMPlus(fileName1, fileName2, fingDescFile):
@@ -229,7 +248,7 @@ fingerPrintFiles = ["DescriptorDataset/sr-mmp_nosalt.sdf.std_nodupl_class.sdf_SV
 
 
 #run SVM for finger print descriptor file
-def svmOnFingDescFile(fileName, C = 100, gamma = .01):
+def svmOnFingDescFile(fileName, C = 10, gamma = .01):
     X_train, X_test, y_train, y_test =  csr.readCSRFile(fileName, split = True)
     # fit svm model
     svm_clf = svmPlus.svmPlusOpt(X_train, y_train, XStar=None, C = C, kernel="rbf",
@@ -247,7 +266,7 @@ def svmOnFingDescFile(fileName, C = 100, gamma = .01):
 def svmOnTopologicalFile(fileName, C = 10, gamma = .001):
     X_train, X_test, y_train, y_test =  loadDataset(fileName, split = True)
     paramC = np.linspace(1, 100, 20)
-    paramGama = np.linspace(.1, .0001, 20)
+    paramGamma = np.linspace(.1, .0001, 20)
 
     X_train, X_test, y_train, y_test = loadDataset(fileName, split=True, returnIndices=False)
     ofile = open('paramGridResults/' + fileName[18:-4], "a")
@@ -265,7 +284,58 @@ def svmOnTopologicalFile(fileName, C = 10, gamma = .001):
             print("Prediction accuracy using SVM for ", fileName)
             print("%d out of %d predictions correct" % (correct, len(y_predict)))
             predAcc = round(correct / len(y_predict), 3)
-            ofile.writelines("param C = %f, gamma = %f, pred accuracy = %f \n" % (paramC[i], paramGama[j], predAcc))
+            ofile.writelines("param C = %f, gamma = %f, pred accuracy = %f \n" % (paramC[i], paramGamma[j], predAcc))
+    ofile.close()
+
+
+# Parameter estimation using grid search with cross-validation
+def gridSearchTopological(fileName):
+    paramC = [.001, .01, .1, 1, 100, 1000]
+    paramGamma = [1e-6, 1e-5, 1e-4, 1e-3, 1e-2, .1]
+
+    X, X_test, y, y_test =  loadDataset(fileName, split = True) # train(80):test(20) split
+
+    cv = StratifiedKFold(n_splits = 5)
+    folds = [[train_index, test_index] for train_index, test_index in cv.split(X, y)]
+    #record the results in a file
+    ofile = open('paramGridResults/' + fileName[18:-4], "a")
+    ofile.write("Size of the train set"+ str(X.shape[0])+ "\n")
+    ofile.write("Size of the test set"+ str(X_test.shape[0])+ "\n")
+
+    predAcc = []
+    index = []
+    # Cross validate
+    for i in range(len(paramC)):
+        for j in range(len(paramGamma)):
+            acc = 0
+            for fold in folds:
+                svm_clf = svmPlus.svmPlusOpt(X[fold[0]], y[fold[0]], XStar=None, C= paramC[i], kernel="rbf",
+                                             kernelParam=paramGamma[j])  # standard SVM
+                y_predict = svmPlus.predict(X[fold[0]], svm_clf)
+                correct = np.sum(y_predict == y[fold[1]])
+                #print("%d out of %d predictions correct" % (correct, len(y_predict)))
+                acc = acc + (correct/len(y_predict))
+
+            acc = acc/5
+            #print(acc)
+            predAcc.append(acc)
+            index.append([i,j])
+            ofile.write("param C = %f, gamma = %f, mean pred accuracy = %f \n" % (paramC[i], paramGamma[j], acc))
+    #print(predAcc)
+    selectedIndex = np.argmax(predAcc)
+    #print(selectedIndex)
+    #print(predAcc[selectedIndex])
+    C = paramC[index[selectedIndex][0]]
+    gamma = paramGamma[index[selectedIndex][1]]
+
+    #Fit the SVM on whole training set and calculate results on test set
+    clf = svm.SVC(gamma=gamma, C=C)
+    clf.fit(X, y)
+    y_predict = clf.predict(X_test)
+    correct = np.sum(y_predict == y_test)
+    predAcc = round(correct / len(y_predict), 3)
+    print("param C = %f, gamma = %f, pred accuracy = %f \n" % (C, gamma, predAcc))
+    ofile.write("param C = %f, gamma = %f, pred accuracy = %f \n" % (C, gamma, predAcc))
     ofile.close()
 
 if __name__ == "__main__":
@@ -274,6 +344,7 @@ if __name__ == "__main__":
     #    runSVMSigDescFile(fileName)
     #svmOnFingDescFile(fingerPrintFiles[0])
     gridSearchWithCV(listFileName[0])
+    #gridSearchWithCV(fingerPrintFiles[0])
     #compareSVMAndSVMPlus(listFileName[0], listFileName[1], fingerPrintFiles[0])
     #compareSVMAndSVMPlus(listFileName[2], listFileName[3], fingerPrintFiles[1])
     #compareSVMAndSVMPlus(listFileName[4], listFileName[5], fingerPrintFiles[2])
