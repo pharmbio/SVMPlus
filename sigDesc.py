@@ -132,13 +132,18 @@ def gridSearchWithCV(fileName):
 
 
 # run SVM+ for sign descriptor files
-def gridSearchSVMPlus(MACCSFile, topoFile, fingDescFile):
-    paramC = [.001, .01, .1, 1, 100, 1000]
-    paramGamma = [1e-6, 1e-5, 1e-4, 1e-3, 1e-2, .1]
-    X, X_test, y, y_test, indices_train,indices_test = \
-        loadDataset(MACCSFile, split = True, returnIndices = True)
+def gridSearchSVMPlus(svmFile, svmPlusFile, svmPlusFile2):
+    paramC = [.001, .01, .1, 1, 100]
+    paramGamma = [1e-5, 1e-4, 1e-3, 1e-2, .1]
+    #X, X_test, y, y_test, indices_train,indices_test = \
+    #    loadDataset(svmFile, split = True, returnIndices = True)
+    path = str("MorganDataset/" + svmFile)
+    X, X_test, y, y_test, indices_train, indices_test = \
+            csr.readCSRFile(path, split = True, returnIndices = True)
 
-    XStar, yStar = loadDataset(topoFile)
+    #XStar, yStar = loadDataset(svmPlusFile)
+    path = str("MorganDataset/" + svmPlusFile)
+    XStar, yStar = csr.readCSRFile(path)
 
     XStar_train = XStar[indices_train]
     XStar_test = XStar[indices_test]
@@ -153,7 +158,8 @@ def gridSearchSVMPlus(MACCSFile, topoFile, fingDescFile):
     else:
         sys.exit("different split for X and XStar")
 
-    XFD, yFD = csr.readCSRFile(fingDescFile)
+    path = str("MorganDataset/" + svmPlusFile2)
+    XFD, yFD = csr.readCSRFile(path)
     XFD_test = XFD[indices_test]
     XFD = XFD[indices_train]
     yFD_test = yFD[indices_test]
@@ -170,7 +176,7 @@ def gridSearchSVMPlus(MACCSFile, topoFile, fingDescFile):
     predAcc = []
     index = []
 
-    ofile = open('paramGridResults/' + "SVMPlus" + MACCSFile[18:-4], "a")
+    ofile = open('paramGridResults/' + "SVMPlus" + svmFile[18:-4], "a")
     ofile.write("Size of the train set" + str(X.shape[0]) + "\n")
     ofile.write("Size of the test set" + str(X_test.shape[0]) + "\n")
 
@@ -179,18 +185,18 @@ def gridSearchSVMPlus(MACCSFile, topoFile, fingDescFile):
             accuracy = 0
             for fold in folds:
                 '''
-                # compute prediction accuracy using SVM+ on MACCSFile, and topoFile as a priv-info
+                # compute prediction accuracy using SVM+ on svmFile, and svmPlusFile as a priv-info
                 clf = svmPlus.svmPlusOpt(X_train, y_train, XStar=XStar_train, C = paramC[i], kernel="rbf",
                                          kernelParam=0.1, kernelStar="rbf", kernelStarParam=0.001,
                                          gamma = paramGamma[j])
                 y_predict = svmPlus.predict(X_test, clf)
                 correct = np.sum(y_predict == y_test)
-                print("Prediction accuracy using SVM+ for ", MACCSFile, topoFile)
+                print("Prediction accuracy using SVM+ for ", svmFile, svmPlusFile)
                 #print("%d out of %d predictions correct" % (correct, len(y_predict)))
                 predAcc = round(correct / len(y_predict), 3)
                 print("param C = %f, gamma = %f, pred accuracy = %f \n" % (C, gamma, predAcc))
                 '''
-                # compute prediction accuracy using SVM+ on MACCSFile, and fingDescFile as a priv-info
+                # compute prediction accuracy using SVM+ on svmFile, and svmPlusFile2 as a priv-info
                 clf = svmPlus.svmPlusOpt(X[fold[0]], y[fold[0]], XStar=XFD[fold[0]], C = paramC[i], kernel="rbf",
                                          kernelParam=0.1, kernelStar="rbf", kernelStarParam=0.001,
                                          gamma = paramGamma[j])
@@ -215,7 +221,7 @@ def gridSearchSVMPlus(MACCSFile, topoFile, fingDescFile):
                              gamma=gamma)
     y_predict = svmPlus.predict(X_test, clf)
     correct = np.sum(y_predict == y_test)
-    # print("Prediction accuracy using SVM+ for ", MACCSFile, fingDescFile)
+    # print("Prediction accuracy using SVM+ for ", svmFile, svmPlusFile2)
     # print("%d out of %d predictions correct" % (correct, len(y_predict)))
     predAcc = round(correct / len(y_predict), 3)
     # print("param C = %f, gamma = %f, pred accuracy = %f \n" % (C, gamma, predAcc))
@@ -355,12 +361,10 @@ def gridSearchTopological(fileName):
 
 if __name__ == "__main__":
     #readDetailsDescriptorFiles()
-    for fileName in morgan512BitsFiles:
-        gridSearchWithCV(fileName)
-    #svmOnFingDescFile(fingerPrintFiles[0])
-    #gridSearchWithCV(fingerPrintFiles[0])
-    #gridSearchSVMPlus(MACCSFiles[0], topologicalFiles[0], fingerPrintFiles[0])
-    #compareSVMAndSVMPlus(MACCSFiles[1], topologicalFiles[1], fingerPrintFiles[1])
-    #compareSVMAndSVMPlus(MACCSFiles[2], topologicalFiles[2], fingerPrintFiles[2])
+    #for fileName in morgan512BitsFiles:
+    #    gridSearchWithCV(fileName)
+
+    gridSearchSVMPlus(morgan64BitsFiles[0], morgan512BitsFiles[0], morgan512BitsUnhashedFiles[0])
+
 
 
