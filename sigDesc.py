@@ -225,47 +225,40 @@ def gridSearchSVMPlus(MACCSFile, topoFile, fingDescFile):
     ofile.close()
 
 
+morgan512BitsFiles = ["bursi_nosalts_molsign.sdf.txt_SVMLIGHT_Morgan_512_bits_radius_3.csv",
+                      "sr-mmp_nosalt.sdf.std_nodupl_class.sdf_SVMLIGHT_Morgan_512_bits_radius_3.csv",
+                      "smiles_cas_N6512.sdf.std_class.sdf_SVMLIGHT_Morgan_512_bits_radius_3.csv"]
+
+morgan512BitsUnhashedFiles = ["bursi_nosalts_molsign.sdf.txt_SVMLIGHT_Morgan_unhashed_radius_3.csv",
+                      "sr-mmp_nosalt.sdf.std_nodupl_class.sdf_SVMLIGHT_Morgan_unhashed_radius_3.csv",
+                      "smiles_cas_N6512.sdf.std_class.sdf_SVMLIGHT_Morgan_unhashed_radius_3.csv"]
+
+morgan64BitsFiles = ["bursi_nosalts_molsign.sdf.txt_SVMLIGHT_Morgan_64_bits_radius_3.csv",
+                     "sr-mmp_nosalt.sdf.std_nodupl_class.sdf_SVMLIGHT_Morgan_64_bits_radius_3.csv",
+                     "smiles_cas_N6512.sdf.std_class.sdf_SVMLIGHT_Morgan_64_bits_radius_3.csv"]
+
+
 
 # Print dimensions of the various descriptor files
 def readDetailsDescriptorFiles():
     for fileName in morgan64BitsFiles:
-        X, y = csr.readCSRFile(fileName)
-        print("Details of the file", fileName)
+        path = str("MorganDataset/" + fileName)
+        X, y = csr.readCSRFile(path)
+        print("Details of the file:", fileName)
         print(X.shape)
+
     for fileName in morgan512BitsFiles :
-        X, y = csr.readCSRFile(fileName)
-        print("Details of the file", fileName)
-        print(X.shape)
-    for fileName in morgan512BitsHashedFiles:
-        X, y = csr.readCSRFile(fileName)
-        print("Details of the file", fileName)
+        path = str("MorganDataset/" + fileName)
+        X, y = csr.readCSRFile(path)
+        print("Details of the file:", fileName)
         print(X.shape)
 
+    for fileName in morgan512BitsUnhashedFiles:
+        path = str("MorganDataset/" + fileName)
+        X, y = csr.readCSRFile(path)
+        print("Details of the file:", fileName)
+        print(X.shape)
 
-#global Variables: descriptor file names
-MACCSFiles = ["DescriptorDataset/sr-mmp_nosalt.sdf.std_nodupl_class.sdf_MACCS_166bit.csv",
-              "DescriptorDataset/smiles_cas_N6512.sdf.std_class.sdf_MACCS_166bit.csv",
-              "DescriptorDataset/bursi_nosalts_molsign.sdf.txt_MACCS_166bit.csv"]
-
-#global Variables: descriptor file names
-topologicalFiles = ["DescriptorDataset/sr-mmp_nosalt.sdf.std_nodupl_class.sdf_topological.csv",
-                    "DescriptorDataset/smiles_cas_N6512.sdf.std_class.sdf_topological.csv",
-                    "DescriptorDataset/bursi_nosalts_molsign.sdf.txt_topological.csv"]
-
-fingerPrintFiles = ["DescriptorDataset/sr-mmp_nosalt.sdf.std_nodupl_class.sdf_SVMLIGHT_Morgan_unhashed_radius_3.csv",
-                    "DescriptorDataset/smiles_cas_N6512.sdf.std_class.sdf_SVMLIGHT_Morgan_unhashed_radius_3.csv",
-                    "DescriptorDataset/bursi_nosalts_molsign.sdf.txt_SVMLIGHT_Morgan_unhashed_radius_3.csv"]
-
-morgan512BitsFiles = ["bursi_nosalts_molsign.sdf.txt_SVMLIGHT_Morgan_512_bits_radius_3.csv",
-                      "sr-mmp_nosalt.sdf.std_nodupl_class.sdf_SVMLIGHT_Morgan_512_bits_radius_3.csv"
-                      "smiles_cas_N6512.sdf.std_class.sdf_SVMLIGHT_Morgan_512_bits_radius_3.csv"]
-
-morgan512BitsHashedFiles = ["bursi_nosalts_molsign.sdf.txt_SVMLIGHT_Morgan_unhashed_radius_3.csv",
-                      "sr-mmp_nosalt.sdf.std_nodupl_class.sdf_SVMLIGHT_Morgan_unhashed_radius_3.csv"
-                        "smiles_cas_N6512.sdf.std_class.sdf_SVMLIGHT_Morgan_unhashed_radius_3.csv"]
-morgan64BitsFiles = ["bursi_nosalts_molsign.sdf.txt_SVMLIGHT_Morgan_64_bits_radius_3.csv",
-                     "sr-mmp_nosalt.sdf.std_nodupl_class.sdf_SVMLIGHT_Morgan_64_bits_radius_3.csv"
-                      "smiles_cas_N6512.sdf.std_class.sdf_SVMLIGHT_Morgan_64_bits_radius_3.csv"]
 
 
 #run SVM for finger print descriptor file
@@ -362,11 +355,11 @@ def gridSearchTopological(fileName):
 
 if __name__ == "__main__":
     #readDetailsDescriptorFiles()
-    for fileName in MACCSFiles:
-        gridSearchWithCV(morgan64BitsFiles[0])
+    for fileName in morgan512BitsFiles:
+        gridSearchWithCV(fileName)
     #svmOnFingDescFile(fingerPrintFiles[0])
     #gridSearchWithCV(fingerPrintFiles[0])
-    gridSearchSVMPlus(MACCSFiles[0], topologicalFiles[0], fingerPrintFiles[0])
+    #gridSearchSVMPlus(MACCSFiles[0], topologicalFiles[0], fingerPrintFiles[0])
     #compareSVMAndSVMPlus(MACCSFiles[1], topologicalFiles[1], fingerPrintFiles[1])
     #compareSVMAndSVMPlus(MACCSFiles[2], topologicalFiles[2], fingerPrintFiles[2])
 

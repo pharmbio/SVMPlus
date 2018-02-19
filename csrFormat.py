@@ -8,8 +8,6 @@ def formatStr(strInput):
     p = strInput.find(":")
     colNo = strInput[:p]
     data = strInput[p+1:]
-    if(colNo == "0"):
-        print()
     return float(colNo), float(data)
 
 
