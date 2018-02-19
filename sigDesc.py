@@ -65,13 +65,14 @@ def gridSearchWithCV(fileName):
     paramC = [.001, .01, .1, 1, 100, 1000]
     paramGamma = [1e-6, 1e-5, 1e-4, 1e-3, 1e-2, .1]
 
-    X, X_test, y, y_test =  loadDataset(fileName, split = True) # train(80):test(20) split
-    #X, X_test, y, y_test = csr.readCSRFile(fileName, split=True)
+    #X, X_test, y, y_test =  loadDataset(fileName, split = True) # train(80):test(20) split
+    path = str("MorganDataset/"+fileName)
+    X, X_test, y, y_test = csr.readCSRFile(path, split=True)
 
     cv = StratifiedKFold(n_splits = 5)
     folds = [[train_index, test_index] for train_index, test_index in cv.split(X, y)]
     #record the results in a file
-    ofile = open('paramGridResults/' + fileName[18:-4], "a")
+    ofile = open('paramGridResults/' + fileName, "a")
     ofile.write("Size of the train set"+ str(X.shape[0])+ "\n")
     ofile.write("Size of the test set"+ str(X_test.shape[0])+ "\n")
 
@@ -227,17 +228,15 @@ def gridSearchSVMPlus(MACCSFile, topoFile, fingDescFile):
 
 # Print dimensions of the various descriptor files
 def readDetailsDescriptorFiles():
-    for fileName in MACCSFiles:
-        X, y = loadDataset(fileName)
+    for fileName in morgan64BitsFiles:
+        X, y = csr.readCSRFile(fileName)
         print("Details of the file", fileName)
         print(X.shape)
-        getIndicesWithMissingValues(fileName) #print info about missing values
-    for fileName in topologicalFiles:
-        X, y = loadDataset(fileName)
+    for fileName in morgan512BitsFiles :
+        X, y = csr.readCSRFile(fileName)
         print("Details of the file", fileName)
         print(X.shape)
-        getIndicesWithMissingValues(fileName) #print info about missing values
-    for fileName in fingerPrintFiles:
+    for fileName in morgan512BitsHashedFiles:
         X, y = csr.readCSRFile(fileName)
         print("Details of the file", fileName)
         print(X.shape)
@@ -256,6 +255,17 @@ topologicalFiles = ["DescriptorDataset/sr-mmp_nosalt.sdf.std_nodupl_class.sdf_to
 fingerPrintFiles = ["DescriptorDataset/sr-mmp_nosalt.sdf.std_nodupl_class.sdf_SVMLIGHT_Morgan_unhashed_radius_3.csv",
                     "DescriptorDataset/smiles_cas_N6512.sdf.std_class.sdf_SVMLIGHT_Morgan_unhashed_radius_3.csv",
                     "DescriptorDataset/bursi_nosalts_molsign.sdf.txt_SVMLIGHT_Morgan_unhashed_radius_3.csv"]
+
+morgan512BitsFiles = ["bursi_nosalts_molsign.sdf.txt_SVMLIGHT_Morgan_512_bits_radius_3.csv",
+                      "sr-mmp_nosalt.sdf.std_nodupl_class.sdf_SVMLIGHT_Morgan_512_bits_radius_3.csv"
+                      "smiles_cas_N6512.sdf.std_class.sdf_SVMLIGHT_Morgan_512_bits_radius_3.csv"]
+
+morgan512BitsHashedFiles = ["bursi_nosalts_molsign.sdf.txt_SVMLIGHT_Morgan_unhashed_radius_3.csv",
+                      "sr-mmp_nosalt.sdf.std_nodupl_class.sdf_SVMLIGHT_Morgan_unhashed_radius_3.csv"
+                        "smiles_cas_N6512.sdf.std_class.sdf_SVMLIGHT_Morgan_unhashed_radius_3.csv"]
+morgan64BitsFiles = ["bursi_nosalts_molsign.sdf.txt_SVMLIGHT_Morgan_64_bits_radius_3.csv",
+                     "sr-mmp_nosalt.sdf.std_nodupl_class.sdf_SVMLIGHT_Morgan_64_bits_radius_3.csv"
+                      "smiles_cas_N6512.sdf.std_class.sdf_SVMLIGHT_Morgan_64_bits_radius_3.csv"]
 
 
 #run SVM for finger print descriptor file
@@ -349,10 +359,11 @@ def gridSearchTopological(fileName):
     ofile.write("param C = %f, gamma = %f, pred accuracy = %f \n" % (C, gamma, predAcc))
     ofile.close()
 
+
 if __name__ == "__main__":
     #readDetailsDescriptorFiles()
-    #for fileName in MACCSFiles:
-    #    gridSearchWithCV(fileName)
+    for fileName in MACCSFiles:
+        gridSearchWithCV(morgan64BitsFiles[0])
     #svmOnFingDescFile(fingerPrintFiles[0])
     #gridSearchWithCV(fingerPrintFiles[0])
     gridSearchSVMPlus(MACCSFiles[0], topologicalFiles[0], fingerPrintFiles[0])
