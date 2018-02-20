@@ -11,4 +11,4 @@ Results/
 svmResults/
 svmPlusResults/
 .idea/SVMPlus.iml
-.idea/
+.idea/modules.xml

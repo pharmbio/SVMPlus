@@ -15,7 +15,10 @@ def gridSearchWithCV(fileName):
 
     #X, X_test, y, y_test =  loadDataset(fileName, split = True) # train(80):test(20) split
     path = str("MorganDataset/"+fileName)
-    X, X_test, y, y_test = csr.readCSRFile(path, split=True)
+    try:
+        X, X_test, y, y_test = csr.readCSRFile(path, split=True)
+    except:
+        X, X_test, y, y_test = csv.loadDataset(path, split=True)
 
     cv = StratifiedKFold(n_splits = 5)
     folds = [[train_index, test_index] for train_index, test_index in cv.split(X, y)]
@@ -89,8 +92,12 @@ def gridSearchSVMPlus(svmFile, svmPlusFile):
     paramC = [.001, .01, .1, 1, 100]
     paramGamma = [1e-5, 1e-4, 1e-3, 1e-2, .1]
     path = str("MorganDataset/" + svmFile)
-    X, X_test, y, y_test, indices_train, indices_test = \
-            csr.readCSRFile(path, split = True, returnIndices = True)
+    try:
+        X, X_test, y, y_test, indices_train, indices_test = \
+            csr.readCSRFile(path, split=True, returnIndices=True)
+    except:
+        X, X_test, y, y_test, indices_train, indices_test = \
+            csv.loadDataset(path, split = True, returnIndices = True)
 
     path = str("MorganDataset/" + svmPlusFile)
     XStar, yStar = csr.readCSRFile(path)
@@ -249,8 +256,12 @@ def svmOnMorganFPFile(svmFile, C = 10, gamma = .01):
 # run SVM Plus for finger print descriptor file
 def svmPlusOnMorganFPFile(svmFile, svmPlusFile, C=1, gamma=.01):
     path = str("MorganDataset/" + svmFile)
-    X_train, X_test, y_train, y_test, indices_train, indices_test = \
-            csr.readCSRFile(path, split = True, returnIndices = True)
+    try:
+        X_train, X_test, y_train, y_test, indices_train, indices_test = \
+            csr.readCSRFile(path, split=True, returnIndices=True)
+    except:
+        X_train, X_test, y_train, y_test, indices_train, indices_test = \
+            csv.loadDataset(path, split = True, returnIndices = True)
 
     path = str("MorganDataset/" + svmPlusFile)
     try:
