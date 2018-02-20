@@ -166,8 +166,8 @@ def gridSearchSVMPlus(svmFile, svmPlusFile):
     ofile.close()
 
 descriptorFiles = ["bursi_nosalts_molsign.sdf.txt_descriptors.csv",
-                   "smiles_cas_N6512.sdf.std_class.sdf_descriptors.csv",
-                   "sr-mmp_nosalt.sdf.std_nodupl_class.sdf_descriptors.csv"]
+                   "sr-mmp_nosalt.sdf.std_nodupl_class.sdf_descriptors.csv",
+                   "smiles_cas_N6512.sdf.std_class.sdf_descriptors.csv"]
 morgan512BitsFiles = ["bursi_nosalts_molsign.sdf.txt_SVMLIGHT_Morgan_512_bits_radius_3.csv",
                       "sr-mmp_nosalt.sdf.std_nodupl_class.sdf_SVMLIGHT_Morgan_512_bits_radius_3.csv",
                       "smiles_cas_N6512.sdf.std_class.sdf_SVMLIGHT_Morgan_512_bits_radius_3.csv"]
@@ -246,7 +246,7 @@ def svmOnMorganFPFile(svmFile, C = 10, gamma = .01):
     y_predict = svmPlus.predict(X_test, svm_clf)
     correct = np.sum(y_predict == y_test)
 
-    print("Prediction accuracy using SVM for ", fileName)
+    print("Prediction accuracy using SVM for ", svmFile)
     print("%d out of %d predictions correct" % (correct, len(y_predict)))
     predAcc = round(correct / len(y_predict), 3)
     ofile.write("param C = %f, gamma = %f, pred accuracy = %f \n" % (C, gamma, predAcc))
@@ -254,7 +254,7 @@ def svmOnMorganFPFile(svmFile, C = 10, gamma = .01):
 
 
 # run SVM Plus for finger print descriptor file
-def svmPlusOnMorganFPFile(svmFile, svmPlusFile, C=1, gamma=.01):
+def svmPlusOnMorganFPFile(svmFile, svmPlusFile, C=10, gamma=.0001):
     path = str("MorganDataset/" + svmFile)
     try:
         X_train, X_test, y_train, y_test, indices_train, indices_test = \
@@ -286,7 +286,7 @@ def svmPlusOnMorganFPFile(svmFile, svmPlusFile, C=1, gamma=.01):
     # fit svm model
     clf = svmPlus.svmPlusOpt(X_train, y_train, XStar=XStar,
                                 C = C, gamma = gamma,
-                                kernel="rbf", kernelParam=0.01,
+                                kernel="rbf", kernelParam=0.001,
                                 kernelStar="rbf", kernelStarParam=0.01)
     y_predict = svmPlus.predict(X_test, clf)
     correct = np.sum(y_predict == y_test)
@@ -299,11 +299,11 @@ def svmPlusOnMorganFPFile(svmFile, svmPlusFile, C=1, gamma=.01):
 
 if __name__ == "__main__":
     #readDetailsDescriptorFiles()
-    #svmOnMorganFPFile(descriptorFiles[0])
-    for fileName in descriptorFiles:
-        gridSearchWithCV(fileName)
-
+    #svmOnMorganFPFile(morgan512BitsUnhashedFiles[2], C = 10, gamma=.01)
+    #for fileName in descriptorFiles:
+    #    gridSearchWithCV(fileName)
+    #svmPlusOnMorganFPFile(descriptorFiles[0], morgan64BitsFiles[0])
     #gridSearchSVMPlus(morgan64BitsFiles[0], morgan512BitsFiles[0], morgan512BitsUnhashedFiles[0])
-
+    svmPlusOnMorganFPFile(descriptorFiles[2], morgan512BitsUnhashedFiles[2])
 
 
