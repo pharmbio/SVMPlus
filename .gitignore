@@ -7,3 +7,8 @@ data/mnistData.csv
 DescriptorDataset/
 paramGridResults/
 printTables
+Results/
+svmResults/
+svmPlusResults/
+.idea/SVMPlus.iml
+.idea/
