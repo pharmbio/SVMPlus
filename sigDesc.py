@@ -302,13 +302,30 @@ def svmPlusOnMorganFPFile(svmFile, svmPlusFile, C=10, gamma=.01,
     ofile.close()
 
 
+#enumFileType = enumerate('DESC', '64BITS', '512BITS', '512BITSUNHASHED')
+DESC = 0
+BITS64 = 1
+BITS512 = 2
+UNHASHED = 3
+#enumDataset = enumerate(BURSI, MMP, CAS)
+BURSI = 0
+MMP = 1
+CAS = 2
+
+#tuned kernel parameters
+tunedParam = [[.0001, .1, .1, .01], # BURSI
+              [.0001, .1, .001, .01], # MMP
+              [.0001, .1, .01, .01]] # CAS
+
 if __name__ == "__main__":
     #readDetailsDescriptorFiles()
     #svmOnMorganFPFile(morgan512BitsUnhashedFiles[2], C = 10, gamma=.01)
     #for fileName in descriptorFiles:
     #    gridSearchWithCV(fileName)
-    #svmPlusOnMorganFPFile(descriptorFiles[0], morgan64BitsFiles[0])
+    svmPlusOnMorganFPFile(descriptorFiles[BURSI], morgan512BitsFiles[BURSI],
+                          kernelParam = tunedParam[BURSI][DESC],
+                          kernelParamStar = tunedParam[BURSI][BITS512])
     #gridSearchSVMPlus(morgan64BitsFiles[0], morgan512BitsFiles[0], morgan512BitsUnhashedFiles[0])
-    svmPlusOnMorganFPFile(descriptorFiles[0], morgan512BitsUnhashedFiles[0])
+    #svmPlusOnMorganFPFile(descriptorFiles[0], morgan512BitsUnhashedFiles[0])
 
 
