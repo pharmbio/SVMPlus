@@ -1,9 +1,31 @@
 from prettytable import PrettyTable
-t = PrettyTable(['FileName', 'Method', 'Pred-accuracy'])
-t.add_row(['BURSI - desc', 'SVM', '0.845'])
-t.add_row(['BURSI - 512bitsUnhashed', 'SVM', '0.904'])
-t.add_row(['BURSI - desc+512bitsUnhashed', 'SVM+', '0.845'])
+t = PrettyTable(['Dataset-BURSI', 'Method', 'Pred-accuracy'])
+t.add_row(['physchem', 'SVM', '0.674'])
+t.add_row(['Morgan512', 'SVM', '0.813'])
+t.add_row(['MorganUnhashed', 'SVM', '0.850'])
+t.add_row(['physchem+Morgan512', 'SVM+', '0.702'])
+t.add_row(['physchem+MorganUnhashed', 'SVM+', '0.702'])
 print(t)
+
+
+
+t = PrettyTable(['Dataset-MMP', 'Method', 'Pred-accuracy'])
+t.add_row(['physchem', 'SVM', '0.845'])
+t.add_row(['Morgan512', 'SVM', '0.869'])
+t.add_row(['MorganUnhashed', 'SVM', '0.904'])
+t.add_row(['physchem+Morgan512', 'SVM+', '0.849'])
+t.add_row(['physchem+MorganUnhashed', 'SVM+', '0.849'])
+print(t)
+
+t = PrettyTable(['Dataset-MMP', 'Method', 'Pred-accuracy'])
+t.add_row(['physchem', 'SVM', '0.845'])
+t.add_row(['Morgan512', 'SVM', '0.869'])
+t.add_row(['MorganUnhashed', 'SVM', '0.904'])
+t.add_row(['physchem+Morgan512', 'SVM+', '0.702'])
+t.add_row(['physchem+MorganUnhashed', 'SVM+', '0.702'])
+print(t)
+
+'''
 t.clear_rows()
 t.add_row(['MMP - desc', 'SVM', '0.845'])
 t.add_row(['MMP - 512bitsUnhashed', 'SVM', '0.904'])
@@ -14,6 +36,7 @@ t.add_row(['CAS - desc', 'SVM', '0.845'])
 t.add_row(['CAS - 512bitsUnhashed', 'SVM', '0.904'])
 t.add_row(['CAS - desc+512bitsUnhashed', 'SVM+', '0.845'])
 print(t)
+'''
 '''
 t = PrettyTable(['SVMFile', 'SVMPlusFile', 'C', 'Gamma', 'Pred-accuracy'])
 t.add_row(['MMP - desc', 'MMP - 512bitsUnhashed', '10', '.001', '0.845'])

@@ -7,6 +7,7 @@ import sys
 from sklearn.model_selection import StratifiedKFold
 from sklearn.metrics import roc_curve, auc
 import os
+from enum import Enum
 
 
 descriptorFiles = ["bursi_nosalts_molsign.sdf.txt_descriptors.csv",
@@ -24,6 +25,31 @@ morgan64BitsFiles = ["bursi_nosalts_molsign.sdf.txt_SVMLIGHT_Morgan_64_bits_radi
                      "sr-mmp_nosalt.sdf.std_nodupl_class.sdf_SVMLIGHT_Morgan_64_bits_radius_3.csv",
                      "smiles_cas_N6512.sdf.std_class.sdf_SVMLIGHT_Morgan_64_bits_radius_3.csv"]
 
+
+#enumFileType = enumerate('DESC', '64BITS', '512BITS', '512BITSUNHASHED')
+class FT(Enum):
+    DESC = 0
+    BITS64 = 1
+    BITS512 = 2
+    UNHASHED = 3
+
+
+#enumDataset = enumerate(BURSI, MMP, CAS)
+class DS(Enum):
+    BURSI = 0
+    MMP = 1
+    CAS = 2
+
+
+#tuned kernel parameters
+tunedParam = [[.0001, .1, .1, .01], # BURSI
+              [.0001, .1, .001, .01], # MMP
+              [.0001, .1, .01, .01]] # CAS
+
+
+indxFT1 = FT.DESC.value
+indxFT2 = FT.UNHASHED.value
+indxDS = DS.CAS.value
 
 
 # Parameter estimation using grid search with cross-validation
@@ -108,8 +134,8 @@ def gridSearchWithCV(fileName):
 # run SVM+ for sign descriptor files
 def gridSearchSVMPlus(svmFile, svmPlusFile,
                       kernelParam = 0.0001, kernelParamStar = 0.01):
-    paramC = [.01, .1, 1, 100]
-    paramGamma = [1e-4, 1e-3, 1e-2, .1]
+    paramC = [.01, .1, 1]
+    paramGamma = [1e-3, 1e-2, .1]
     path = str("MorganDataset/" + svmFile)
     try:
         X, X_test, y, y_test, indices_train, indices_test = \
@@ -132,8 +158,9 @@ def gridSearchSVMPlus(svmFile, svmPlusFile,
     else:
         sys.exit("different split for X and XStar")
 
+    n_splits = 3
     # record the results in a file
-    cv = StratifiedKFold(n_splits=5)
+    cv = StratifiedKFold(n_splits = n_splits)
     folds = [[train_index, test_index] for train_index, test_index in cv.split(X, y)]
     predAcc = []
     index = []
@@ -161,7 +188,7 @@ def gridSearchSVMPlus(svmFile, svmPlusFile,
                 accuracy = accuracy + (correct / len(y_predict))
 
             print(i, j)
-            accuracy = accuracy / 5
+            accuracy = accuracy / n_splits
             predAcc.append(accuracy)
             index.append([i, j])
             ofile.write("param C = %f, gamma = %f, mean pred accuracy = %f \n" %
@@ -302,30 +329,19 @@ def svmPlusOnMorganFPFile(svmFile, svmPlusFile, C=10, gamma=.01,
     ofile.close()
 
 
-#enumFileType = enumerate('DESC', '64BITS', '512BITS', '512BITSUNHASHED')
-DESC = 0
-BITS64 = 1
-BITS512 = 2
-UNHASHED = 3
-#enumDataset = enumerate(BURSI, MMP, CAS)
-BURSI = 0
-MMP = 1
-CAS = 2
-
-#tuned kernel parameters
-tunedParam = [[.0001, .1, .1, .01], # BURSI
-              [.0001, .1, .001, .01], # MMP
-              [.0001, .1, .01, .01]] # CAS
 
 if __name__ == "__main__":
     #readDetailsDescriptorFiles()
     #svmOnMorganFPFile(morgan512BitsUnhashedFiles[2], C = 10, gamma=.01)
     #for fileName in descriptorFiles:
     #    gridSearchWithCV(fileName)
-    svmPlusOnMorganFPFile(descriptorFiles[BURSI], morgan512BitsFiles[BURSI],
-                          kernelParam = tunedParam[BURSI][DESC],
-                          kernelParamStar = tunedParam[BURSI][BITS512])
-    #gridSearchSVMPlus(morgan64BitsFiles[0], morgan512BitsFiles[0], morgan512BitsUnhashedFiles[0])
-    #svmPlusOnMorganFPFile(descriptorFiles[0], morgan512BitsUnhashedFiles[0])
-
-
+    print("morgan512BitsUnhashedFiles")
+    gridSearchSVMPlus(descriptorFiles[indxDS], morgan512BitsUnhashedFiles[indxDS],
+                          kernelParam = tunedParam[indxDS][indxFT1],
+                          kernelParamStar = tunedParam[indxDS][indxFT2])
+    '''
+    svmPlusOnMorganFPFile(descriptorFiles[indxDS], morgan512BitsUnhashedFiles[indxDS],
+                          C=10, gamma=.0001,
+                          kernelParam = tunedParam[indxDS][indxFT1],
+                          kernelParamStar = tunedParam[indxDS][indxFT2])
+    '''
