@@ -8,6 +8,24 @@ from sklearn.model_selection import StratifiedKFold
 from sklearn.metrics import roc_curve, auc
 import os
 
+
+descriptorFiles = ["bursi_nosalts_molsign.sdf.txt_descriptors.csv",
+                   "sr-mmp_nosalt.sdf.std_nodupl_class.sdf_descriptors.csv",
+                   "smiles_cas_N6512.sdf.std_class.sdf_descriptors.csv"]
+morgan512BitsFiles = ["bursi_nosalts_molsign.sdf.txt_SVMLIGHT_Morgan_512_bits_radius_3.csv",
+                      "sr-mmp_nosalt.sdf.std_nodupl_class.sdf_SVMLIGHT_Morgan_512_bits_radius_3.csv",
+                      "smiles_cas_N6512.sdf.std_class.sdf_SVMLIGHT_Morgan_512_bits_radius_3.csv"]
+
+morgan512BitsUnhashedFiles = ["bursi_nosalts_molsign.sdf.txt_SVMLIGHT_Morgan_unhashed_radius_3.csv",
+                      "sr-mmp_nosalt.sdf.std_nodupl_class.sdf_SVMLIGHT_Morgan_unhashed_radius_3.csv",
+                      "smiles_cas_N6512.sdf.std_class.sdf_SVMLIGHT_Morgan_unhashed_radius_3.csv"]
+
+morgan64BitsFiles = ["bursi_nosalts_molsign.sdf.txt_SVMLIGHT_Morgan_64_bits_radius_3.csv",
+                     "sr-mmp_nosalt.sdf.std_nodupl_class.sdf_SVMLIGHT_Morgan_64_bits_radius_3.csv",
+                     "smiles_cas_N6512.sdf.std_class.sdf_SVMLIGHT_Morgan_64_bits_radius_3.csv"]
+
+
+
 # Parameter estimation using grid search with cross-validation
 def gridSearchWithCV(fileName):
     paramC = [.001, .01, .1, 1, 100, 1000]
@@ -88,9 +106,10 @@ def gridSearchWithCV(fileName):
 
 
 # run SVM+ for sign descriptor files
-def gridSearchSVMPlus(svmFile, svmPlusFile):
-    paramC = [.001, .01, .1, 1, 100]
-    paramGamma = [1e-5, 1e-4, 1e-3, 1e-2, .1]
+def gridSearchSVMPlus(svmFile, svmPlusFile,
+                      kernelParam = 0.0001, kernelParamStar = 0.01):
+    paramC = [.01, .1, 1, 100]
+    paramGamma = [1e-4, 1e-3, 1e-2, .1]
     path = str("MorganDataset/" + svmFile)
     try:
         X, X_test, y, y_test, indices_train, indices_test = \
@@ -135,8 +154,8 @@ def gridSearchSVMPlus(svmFile, svmPlusFile):
                 # compute prediction accuracy using SVM+ on svmFile, and svmPlusFile2 as a priv-info
                 clf = svmPlus.svmPlusOpt(X[train_index], y[train_index], XStar=XStar[train_index],
                                          C = paramC[i], gamma = paramGamma[j],
-                                         kernel="rbf", kernelParam=0.01,
-                                         kernelStar="rbf", kernelStarParam=0.01)
+                                         kernel="rbf", kernelParam=kernelParam,
+                                         kernelStar="rbf", kernelStarParam=kernelParamStar)
                 y_predict = svmPlus.predict(X[test_index], clf)
                 correct = np.sum(y_predict == y[test_index])
                 accuracy = accuracy + (correct / len(y_predict))
@@ -153,32 +172,17 @@ def gridSearchSVMPlus(svmFile, svmPlusFile):
     gamma = paramGamma[index[selectedIndex][1]]
 
     # For optimal parameters
-    clf = svmPlus.svmPlusOpt(X, y, XStar= XStar, C=C, kernel="rbf",
-                             kernelParam=0.1, kernelStar="rbf", kernelStarParam=0.001,
-                             gamma=gamma)
+    clf = svmPlus.svmPlusOpt(X, y, XStar= XStar, C=C, gamma=gamma,
+                             kernel="rbf", kernelParam = kernelParam,
+                             kernelStar="rbf", kernelStarParam = kernelParamStar)
     y_predict = svmPlus.predict(X_test, clf)
     correct = np.sum(y_predict == y_test)
     predAcc = round(correct / len(y_predict), 3)
     # print("param C = %f, gamma = %f, pred accuracy = %f \n" % (C, gamma, predAcc))
     #print("param C = %f, gamma = %f, AUC = %f \n" % (C, gamma, predAcc))
     ofile.write("param C = %f, gamma = %f, AUC = %f \n" % (C, gamma, predAcc))
-
     ofile.close()
 
-descriptorFiles = ["bursi_nosalts_molsign.sdf.txt_descriptors.csv",
-                   "sr-mmp_nosalt.sdf.std_nodupl_class.sdf_descriptors.csv",
-                   "smiles_cas_N6512.sdf.std_class.sdf_descriptors.csv"]
-morgan512BitsFiles = ["bursi_nosalts_molsign.sdf.txt_SVMLIGHT_Morgan_512_bits_radius_3.csv",
-                      "sr-mmp_nosalt.sdf.std_nodupl_class.sdf_SVMLIGHT_Morgan_512_bits_radius_3.csv",
-                      "smiles_cas_N6512.sdf.std_class.sdf_SVMLIGHT_Morgan_512_bits_radius_3.csv"]
-
-morgan512BitsUnhashedFiles = ["bursi_nosalts_molsign.sdf.txt_SVMLIGHT_Morgan_unhashed_radius_3.csv",
-                      "sr-mmp_nosalt.sdf.std_nodupl_class.sdf_SVMLIGHT_Morgan_unhashed_radius_3.csv",
-                      "smiles_cas_N6512.sdf.std_class.sdf_SVMLIGHT_Morgan_unhashed_radius_3.csv"]
-
-morgan64BitsFiles = ["bursi_nosalts_molsign.sdf.txt_SVMLIGHT_Morgan_64_bits_radius_3.csv",
-                     "sr-mmp_nosalt.sdf.std_nodupl_class.sdf_SVMLIGHT_Morgan_64_bits_radius_3.csv",
-                     "smiles_cas_N6512.sdf.std_class.sdf_SVMLIGHT_Morgan_64_bits_radius_3.csv"]
 
 
 
@@ -254,7 +258,8 @@ def svmOnMorganFPFile(svmFile, C = 10, gamma = .01):
 
 
 # run SVM Plus for finger print descriptor file
-def svmPlusOnMorganFPFile(svmFile, svmPlusFile, C=10, gamma=.0001):
+def svmPlusOnMorganFPFile(svmFile, svmPlusFile, C=10, gamma=.01,
+                          kernelParam=0.0001, kernelParamStar=0.01):
     path = str("MorganDataset/" + svmFile)
     try:
         X_train, X_test, y_train, y_test, indices_train, indices_test = \
@@ -286,8 +291,8 @@ def svmPlusOnMorganFPFile(svmFile, svmPlusFile, C=10, gamma=.0001):
     # fit svm model
     clf = svmPlus.svmPlusOpt(X_train, y_train, XStar=XStar,
                                 C = C, gamma = gamma,
-                                kernel="rbf", kernelParam=0.001,
-                                kernelStar="rbf", kernelStarParam=0.01)
+                                kernel="rbf", kernelParam=kernelParam,
+                                kernelStar="rbf", kernelStarParam=kernelParamStar)
     y_predict = svmPlus.predict(X_test, clf)
     correct = np.sum(y_predict == y_test)
     print("Prediction accuracy using SVM for ", svmFile)
@@ -304,6 +309,6 @@ if __name__ == "__main__":
     #    gridSearchWithCV(fileName)
     #svmPlusOnMorganFPFile(descriptorFiles[0], morgan64BitsFiles[0])
     #gridSearchSVMPlus(morgan64BitsFiles[0], morgan512BitsFiles[0], morgan512BitsUnhashedFiles[0])
-    svmPlusOnMorganFPFile(descriptorFiles[2], morgan512BitsUnhashedFiles[2])
+    svmPlusOnMorganFPFile(descriptorFiles[0], morgan512BitsUnhashedFiles[0])
 
 
