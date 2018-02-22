@@ -1,6 +1,7 @@
 import numpy as np
 import csv as csv
 from sklearn.model_selection import train_test_split
+from sklearn import preprocessing
 #from numpy.random import RandomState
 import math
 
@@ -45,6 +46,7 @@ def loadDataset(fileName, split=False, returnIndices = False):
     X = np.array([x[1:] for x in data]).astype(float)
     y = np.array([x[0] for x in data]).astype(np.int) #labels
 
+    X = preprocessing.scale(X) # standardize the data
     del data # free up the memory
 
     if split:

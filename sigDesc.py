@@ -10,7 +10,7 @@ import os
 from enum import Enum
 
 
-descriptorFiles = ["bursi_nosalts_molsign.sdf.txt_descriptors.csv",
+phyChemFile = ["bursi_nosalts_molsign.sdf.txt_descriptors.csv",
                    "sr-mmp_nosalt.sdf.std_nodupl_class.sdf_descriptors.csv",
                    "smiles_cas_N6512.sdf.std_class.sdf_descriptors.csv"]
 
@@ -27,9 +27,9 @@ morgan64BitsFiles = ["bursi_nosalts_molsign.sdf.txt_SVMLIGHT_Morgan_64_bits_radi
                      "smiles_cas_N6512.sdf.std_class.sdf_SVMLIGHT_Morgan_64_bits_radius_3.csv"]
 
 
-#enumFileType = enumerate('DESC', '64BITS', '512BITS', '512BITSUNHASHED')
+#enumFileType = enumerate('PHYSCHEM', '64BITS', '512BITS', '512BITSUNHASHED')
 class FT(Enum):
-    DESC = 0
+    PHYSCHEM = 0
     BITS64 = 1
     BITS512 = 2
     UNHASHED = 3
@@ -45,14 +45,14 @@ class DS(Enum):
 #tuned kernel parameters
 tunedParam = [[.0001, .1, .1, .01], # BURSI
               [.0001, .1, .001, .01], # MMP
-              [.0001, .1, .01, .01]] # CAS
+              [.00001, .1, .01, .01]] # CAS
 
 
 
 # Parameter estimation using grid search with cross-validation
 def gridSearchWithCV(fileName):
-    paramC = [.1, 1, 100, 1000]
-    paramGamma = [1e-5, 1e-4, 1e-3, 1e-2, .1]
+    paramC = [1, 10, 100]
+    paramGamma = [1e-4, 1e-3, 1e-2, .1]
 
     #X, X_test, y, y_test =  loadDataset(fileName, split = True) # train(80):test(20) split
     path = str("MorganDataset/"+fileName)
@@ -219,7 +219,7 @@ def readDetailsDescriptorFiles():
         os.makedirs(dirPath)
     ofile = open(dirPath + "fileDetails.txt", "w")
 
-    for fileName in descriptorFiles:
+    for fileName in phyChemFile:
         path = str("MorganDataset/" + fileName)
         X, y = csv.loadDataset(path)
         ofile.write("fileName: %s \n" % (fileName))
@@ -328,20 +328,25 @@ def svmPlusOnMorganFPFile(svmFile, svmPlusFile, C=10, gamma=.01,
     ofile.close()
 
 
+
 indxDS = DS.CAS.value #current dataset
-tunedKParam = tunedParam[indxDS][FT.DESC.value]
+tunedKParam = tunedParam[indxDS][FT.PHYSCHEM.value]
 tunedKStarParam = tunedParam[indxDS][FT.UNHASHED.value]
 svmPlusFilename = morganUnhashedFiles[indxDS]
-svmFilename = descriptorFiles[indxDS]
+svmFilename = phyChemFile[indxDS]
+
+
 
 if __name__ == "__main__":
     #readDetailsDescriptorFiles()
     #svmOnMorganFPFile(morganUnhashedFiles[2], C = 10, gamma=.01)
-    #for fileName in descriptorFiles:
+    #for fileName in phyChemFile:
     #    gridSearchWithCV(fileName)
 
     '''
-    #pending for tuning 
+    svmOnMorganFPFile(phyChemFile[indxDS], C=100, gamma=.0001)
+    #pending for tuning
+    svmOnMorganFPFile(phyChemFile[indxDS], C = 100, gamma=.0001) 
     gridSearchWithCV(morgan512BitsFiles[2])
     gridSearchWithCV(morganUnhashedFiles[0])
     gridSearchWithCV(morganUnhashedFiles[1])
@@ -352,14 +357,17 @@ if __name__ == "__main__":
     gridSearchSVMPlus(svmFilename, morgan512BitsFiles[indxDS],
                           kernelParam = tunedParam[indxDS][indxFT1],
                           kernelParamStar = tunedParam[indxDS][indxFT2])                          
-    '''
+    
     print(svmFilename)
     svmPlusOnMorganFPFile(svmFilename, svmPlusFilename,
-                          C=1, gamma=.001,
+                          C=10, gamma=.0001,
                           kernelParam = tunedKParam,
                           kernelParamStar = tunedKStarParam)
+    '''
 
     svmPlusOnMorganFPFile(svmFilename, svmPlusFilename,
-                          C=1, gamma=.0001,
+                          C=100, gamma=.001,
                           kernelParam=tunedKParam,
                           kernelParamStar=tunedKStarParam)
+
+
