@@ -329,7 +329,7 @@ def svmPlusOnMorganFPFile(svmFile, svmPlusFile, C=10, gamma=.01,
 
 
 
-indxDS = DS.CAS.value #current dataset
+indxDS = DS.MMP.value #current dataset
 tunedKParam = tunedParam[indxDS][FT.PHYSCHEM.value]
 tunedKStarParam = tunedParam[indxDS][FT.UNHASHED.value]
 svmPlusFilename = morganUnhashedFiles[indxDS]
@@ -342,7 +342,7 @@ if __name__ == "__main__":
     #svmOnMorganFPFile(morganUnhashedFiles[2], C = 10, gamma=.01)
     #for fileName in phyChemFile:
     #    gridSearchWithCV(fileName)
-
+    svmOnMorganFPFile(phyChemFile[indxDS], C=100, gamma=.0001)
     '''
     svmOnMorganFPFile(phyChemFile[indxDS], C=100, gamma=.0001)
     #pending for tuning
@@ -363,7 +363,6 @@ if __name__ == "__main__":
                           C=10, gamma=.0001,
                           kernelParam = tunedKParam,
                           kernelParamStar = tunedKStarParam)
-    '''
 
     svmPlusOnMorganFPFile(svmFilename, svmPlusFilename,
                           C=100, gamma=.001,
@@ -371,3 +370,4 @@ if __name__ == "__main__":
                           kernelParamStar=tunedKStarParam)
 
 
+    '''

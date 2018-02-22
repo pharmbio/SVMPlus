@@ -25,11 +25,11 @@ t.add_row(['Morgan512', 'SVM', '0.766'])
 t.add_row(['MorganUnhashed', 'SVM', '0.823'])
 t.add_row(['physchem', 'SVM', '0.639'])
 t.add_row(['physchem+Morgan512', 'SVM+', '0.659'])
-t.add_row(['physchem+MorganUnhashed', 'SVM+', '0.681'])
+t.add_row(['physchem+MorganUnhashed', 'SVM+', '0.686'])
 print(t)
 
 
-
+'''
 plt.rcdefaults()
 objects = ('SVM on MorganUnhashed', 'SVM on Morgan512', 'SVM on Physchem',
            'SVM+ on Physchem+Morgan512', 'SVM+ on Physchem+MorganUnhashed')
@@ -58,13 +58,13 @@ plt.rcdefaults()
 objects = ('SVM on MorganUnhashed', 'SVM on Morgan512', 'SVM on Physchem',
            'SVM+ on Physchem+Morgan512', 'SVM+ on Physchem+MorganUnhashed')
 y_pos = np.arange(len(objects))
-performance = [ 0.823, 0.766, 0.639, 0.659, 0.681]
+performance = [ 0.823, 0.766, 0.639, 0.659, 0.686]
 plt.bar(y_pos, performance, align='center', alpha=0.5)
 plt.xticks(y_pos, objects)
 plt.ylabel('Prediction Accuracy')
 plt.title('Results on CAS dataset')
 plt.show()
-
+'''
 '''
 t.clear_rows()
 t.add_row(['MMP - desc', 'SVM', '0.845'])
