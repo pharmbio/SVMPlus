@@ -35,7 +35,7 @@ def loadDataset(fileName, split=False, returnIndices = False):
     data = []
     # Read the dataset
     file = open(fileName)
-    reader = csv.reader(file, delimiter = ',')
+    reader = csv.reader(file, delimiter = '\t')
     next(reader)
     for row in reader:
         newRow = [float(val) if val else 0 for val in row]

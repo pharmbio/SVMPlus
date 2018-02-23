@@ -43,9 +43,9 @@ class DS(Enum):
 
 
 #tuned kernel parameters
-tunedParam = [[.0001, .1, .1, .01], # BURSI
-              [.0001, .1, .001, .01], # MMP
-              [.00001, .1, .01, .01]] # CAS
+tunedParam = [[.1, .1, .1, .01], # BURSI
+              [.01, .1, .001, .01], # MMP
+              [.01, .1, .01, .01]] # CAS
 
 
 
@@ -329,7 +329,7 @@ def svmPlusOnMorganFPFile(svmFile, svmPlusFile, C=10, gamma=.01,
 
 
 
-indxDS = DS.MMP.value #current dataset
+indxDS = DS.CAS.value #current dataset
 tunedKParam = tunedParam[indxDS][FT.PHYSCHEM.value]
 tunedKStarParam = tunedParam[indxDS][FT.UNHASHED.value]
 svmPlusFilename = morganUnhashedFiles[indxDS]
@@ -342,7 +342,9 @@ if __name__ == "__main__":
     #svmOnMorganFPFile(morganUnhashedFiles[2], C = 10, gamma=.01)
     #for fileName in phyChemFile:
     #    gridSearchWithCV(fileName)
-    svmOnMorganFPFile(phyChemFile[indxDS], C=100, gamma=.0001)
+    #svmOnMorganFPFile(phyChemFile[0], C=1, gamma=.1)
+    #svmOnMorganFPFile(phyChemFile[1], C=10, gamma=.01)
+    #svmOnMorganFPFile(phyChemFile[2], C=10, gamma=.01)
     '''
     svmOnMorganFPFile(phyChemFile[indxDS], C=100, gamma=.0001)
     #pending for tuning
@@ -371,3 +373,12 @@ if __name__ == "__main__":
 
 
     '''
+    svmPlusOnMorganFPFile(svmFilename, svmPlusFilename,
+                          C=1, gamma=.01,
+                          kernelParam=tunedKParam,
+                          kernelParamStar=tunedKStarParam)
+
+    svmPlusOnMorganFPFile(svmFilename, svmPlusFilename,
+                          C=10, gamma=.01,
+                          kernelParam=tunedKParam,
+                          kernelParamStar=tunedKStarParam)
