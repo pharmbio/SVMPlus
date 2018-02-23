@@ -14,38 +14,24 @@ phyChemFile = ["bursi_nosalts_molsign.sdf.txt_descriptors.csv",
                    "sr-mmp_nosalt.sdf.std_nodupl_class.sdf_descriptors.csv",
                    "smiles_cas_N6512.sdf.std_class.sdf_descriptors.csv"]
 
-morgan512BitsFiles = ["bursi_nosalts_molsign.sdf.txt_SVMLIGHT_Morgan_512_bits_radius_3.csv",
-                      "sr-mmp_nosalt.sdf.std_nodupl_class.sdf_SVMLIGHT_Morgan_512_bits_radius_3.csv",
-                      "smiles_cas_N6512.sdf.std_class.sdf_SVMLIGHT_Morgan_512_bits_radius_3.csv"]
-
 morganUnhashedFiles = ["bursi_nosalts_molsign.sdf.txt_SVMLIGHT_Morgan_unhashed_radius_3.csv",
                       "sr-mmp_nosalt.sdf.std_nodupl_class.sdf_SVMLIGHT_Morgan_unhashed_radius_3.csv",
                       "smiles_cas_N6512.sdf.std_class.sdf_SVMLIGHT_Morgan_unhashed_radius_3.csv"]
 
-morgan64BitsFiles = ["bursi_nosalts_molsign.sdf.txt_SVMLIGHT_Morgan_64_bits_radius_3.csv",
-                     "sr-mmp_nosalt.sdf.std_nodupl_class.sdf_SVMLIGHT_Morgan_64_bits_radius_3.csv",
-                     "smiles_cas_N6512.sdf.std_class.sdf_SVMLIGHT_Morgan_64_bits_radius_3.csv"]
 
 
-#enumFileType = enumerate('PHYSCHEM', '64BITS', '512BITS', '512BITSUNHASHED')
-class FT(Enum):
-    PHYSCHEM = 0
-    BITS64 = 1
-    BITS512 = 2
-    UNHASHED = 3
+PHYSCHEM = 0
+UNHASHED = 1
 
 
-#enumDataset = enumerate(BURSI, MMP, CAS)
-class DS(Enum):
-    BURSI = 0
-    MMP = 1
-    CAS = 2
-
+BURSI = 0
+MMP = 1
+CAS = 2
 
 #tuned kernel parameters
-tunedParam = [[.1, .1, .1, .01], # BURSI
-              [.01, .1, .001, .01], # MMP
-              [.01, .1, .01, .01]] # CAS
+tunedParam = [[.1, .01], # BURSI
+              [.01, .01], # MMP
+              [.01, .01]] # CAS
 
 
 
@@ -227,22 +213,6 @@ def readDetailsDescriptorFiles():
         print("Details of the file:", fileName)
         print(X.shape)
 
-    for fileName in morgan64BitsFiles:
-        path = str("MorganDataset/" + fileName)
-        X, y = csr.readCSRFile(path)
-        ofile.write("fileName: %s \n" % (fileName))
-        ofile.write("Dimension of the file %d X %d \n" % (X.shape))
-        print("Details of the file:", fileName)
-        print(X.shape)
-
-    for fileName in morgan512BitsFiles :
-        path = str("MorganDataset/" + fileName)
-        X, y = csr.readCSRFile(path)
-        ofile.write("fileName: %s \n" % (fileName))
-        ofile.write("Dimension of the file %d X %d \n" % (X.shape))
-        print("Details of the file:", fileName)
-        print(X.shape)
-
     for fileName in morganUnhashedFiles:
         path = str("MorganDataset/" + fileName)
         X, y = csr.readCSRFile(path)
@@ -254,7 +224,7 @@ def readDetailsDescriptorFiles():
 
 
 #run SVM for finger print descriptor file
-def svmOnMorganFPFile(svmFile, C = 10, gamma = .01):
+def svmOnMorganDataset(svmFile, C = 10, gamma = .01):
     path = str("MorganDataset/" + svmFile)
     try:
         X_train, X_test, y_train, y_test = csr.readCSRFile(path, split=True)
@@ -284,7 +254,7 @@ def svmOnMorganFPFile(svmFile, C = 10, gamma = .01):
 
 
 # run SVM Plus for finger print descriptor file
-def svmPlusOnMorganFPFile(svmFile, svmPlusFile, C=10, gamma=.01,
+def svmPlusOnMorganDataset(svmFile, svmPlusFile, C=10, gamma=.01,
                           kernelParam=0.0001, kernelParamStar=0.01):
     path = str("MorganDataset/" + svmFile)
     try:
@@ -328,57 +298,42 @@ def svmPlusOnMorganFPFile(svmFile, svmPlusFile, C=10, gamma=.01,
     ofile.close()
 
 
-
-indxDS = DS.CAS.value #current dataset
-tunedKParam = tunedParam[indxDS][FT.PHYSCHEM.value]
-tunedKStarParam = tunedParam[indxDS][FT.UNHASHED.value]
-svmPlusFilename = morganUnhashedFiles[indxDS]
-svmFilename = phyChemFile[indxDS]
-
-
+# some settings before experiment
+DATASET = BURSI
+svmFilename = phyChemFile[DATASET]
+svmPlusFilename = morganUnhashedFiles[DATASET]
+tunedKParam = tunedParam[DATASET][0]
+tunedKStarParam = tunedParam[DATASET][1]
 
 if __name__ == "__main__":
     #readDetailsDescriptorFiles()
-    #svmOnMorganFPFile(morganUnhashedFiles[2], C = 10, gamma=.01)
     #for fileName in phyChemFile:
     #    gridSearchWithCV(fileName)
-    #svmOnMorganFPFile(phyChemFile[0], C=1, gamma=.1)
-    #svmOnMorganFPFile(phyChemFile[1], C=10, gamma=.01)
-    #svmOnMorganFPFile(phyChemFile[2], C=10, gamma=.01)
     '''
-    svmOnMorganFPFile(phyChemFile[indxDS], C=100, gamma=.0001)
     #pending for tuning
-    svmOnMorganFPFile(phyChemFile[indxDS], C = 100, gamma=.0001) 
-    gridSearchWithCV(morgan512BitsFiles[2])
     gridSearchWithCV(morganUnhashedFiles[0])
     gridSearchWithCV(morganUnhashedFiles[1])
     gridSearchWithCV(morganUnhashedFiles[2])
-    gridSearchSVMPlus(svmFilename, morganUnhashedFiles[indxDS],
-                          kernelParam = tunedParam[indxDS][indxFT1],
-                          kernelParamStar = tunedParam[indxDS][indxFT2])
-    gridSearchSVMPlus(svmFilename, morgan512BitsFiles[indxDS],
-                          kernelParam = tunedParam[indxDS][indxFT1],
-                          kernelParamStar = tunedParam[indxDS][indxFT2])                          
-    
-    print(svmFilename)
-    svmPlusOnMorganFPFile(svmFilename, svmPlusFilename,
-                          C=10, gamma=.0001,
+    gridSearchSVMPlus(svmFilename,svmPlusFilename,
                           kernelParam = tunedKParam,
                           kernelParamStar = tunedKStarParam)
-
-    svmPlusOnMorganFPFile(svmFilename, svmPlusFilename,
-                          C=100, gamma=.001,
-                          kernelParam=tunedKParam,
-                          kernelParamStar=tunedKStarParam)
-
-
+    gridSearchSVMPlus(svmFilename, svmPlusFilename,
+                          kernelParam = tunedKParam,
+                          kernelParamStar = tunedKStarParam)                          
+    
+    
     '''
-    svmPlusOnMorganFPFile(svmFilename, svmPlusFilename,
-                          C=1, gamma=.01,
+    svmPlusOnMorganDataset(svmFilename, svmPlusFilename,
+                          C=1, gamma=.1,
                           kernelParam=tunedKParam,
                           kernelParamStar=tunedKStarParam)
 
-    svmPlusOnMorganFPFile(svmFilename, svmPlusFilename,
-                          C=10, gamma=.01,
+    svmPlusOnMorganDataset(svmFilename, svmPlusFilename,
+                          C=10, gamma=.1,
+                          kernelParam=tunedKParam,
+                          kernelParamStar=tunedKStarParam)
+
+    svmPlusOnMorganDataset(svmFilename, svmPlusFilename,
+                          C=100, gamma=.1,
                           kernelParam=tunedKParam,
                           kernelParamStar=tunedKStarParam)
