@@ -30,8 +30,8 @@ CAS = 2
 
 #tuned kernel parameters
 tunedParam = [[.1, .01], # BURSI
-              [.01, .01], # MMP
-              [.01, .01]] # CAS
+              [.1, .01], # MMP
+              [.1, .01]] # CAS
 
 
 
@@ -309,6 +309,8 @@ if __name__ == "__main__":
     #readDetailsDescriptorFiles()
     #for fileName in phyChemFile:
     #    gridSearchWithCV(fileName)
+    #svmOnMorganDataset(svmFilename, C=10, gamma=.1)
+
     '''
     #pending for tuning
     gridSearchWithCV(morganUnhashedFiles[0])
@@ -321,8 +323,8 @@ if __name__ == "__main__":
                           kernelParam = tunedKParam,
                           kernelParamStar = tunedKStarParam)                          
     
-    
     '''
+    
     svmPlusOnMorganDataset(svmFilename, svmPlusFilename,
                           C=1, gamma=.1,
                           kernelParam=tunedKParam,

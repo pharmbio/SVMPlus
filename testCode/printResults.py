@@ -30,6 +30,7 @@ print(t)
 
 
 '''
+#plot results
 plt.rcdefaults()
 objects = ('SVM on MorganUnhashed', 'SVM on Morgan512', 'SVM on Physchem',
            'SVM+ on Physchem+Morgan512', 'SVM+ on Physchem+MorganUnhashed')
@@ -88,26 +89,21 @@ t = PrettyTable(['SVMFile', 'SVMPlusFile', 'C', 'Gamma', 'Pred-accuracy'])
 t.add_row(['Bursi - desc', 'Bursi - 512bitsUnhashed', '0.0001', '0.674', '0.742'])
 print(t)
 
-t = PrettyTable(['File Name', 'C', 'Gamma', 'Pred-accuracy', 'AUC'])
-t.add_row(['Bursi - desc', '100', '0.0001', '0.674', '0.742'])
-t.add_row(['Bursi - 64bits', '1', '0.1', '0.796', '0.861'])
-t.add_row(['Bursi - 512bits', '1', '0.1', '0.813', '0.890'])
+#param C = 100.000000, gamma = 0.100000, pred accuracy = 0.680000
+t = PrettyTable(['File Name', 'C', 'Gamma', 'Pred-accuracy'])
+t.add_row(['Bursi - desc', '100', '0.1', '0.68'])
 t.add_row(['Bursi - 512bitsUnhashed', '10', '.01', '0.850', 'TBC'])
 print(t)
 
-
-t = PrettyTable(['File Name', 'C', 'Gamma', 'Pred-accuracy', 'AUC'])
-t.add_row(['MMP - desc', '100', '0.001', '0.838', '0.747'])
-t.add_row(['MMP - 64bits', '100', '0.1', '0.867', '0.801'])
-t.add_row(['MMP - 512bits', '100', '0.0001', '0.869', '0.852'])
+param C = 10.000000, gamma = 0.100000, pred accuracy = 0.849000
+t = PrettyTable(['File Name', 'C', 'Gamma', 'Pred-accuracy'])
+t.add_row(['MMP - desc', '100', '0.1', '0.849'])
 t.add_row(['MMP - 512bitsUnhashed', '10', '.01', '0.904', 'TBC'])
 print(t)
 
-
+param C = 100.000000, gamma = 0.100000, pred accuracy = 0.661000
 t = PrettyTable(['File Name', 'C', 'Gamma', 'Pred-accuracy', 'AUC'])
-t.add_row(['CAS - desc', '100', '0.0001', '0.639', '0.748'])
-t.add_row(['CAS - 64bits', '1', '0.1', '0.742', '0.817'])
-t.add_row(['CAS - 512bits', '10', '.01', '0.771', 'TBC'])
+t.add_row(['CAS - desc', '100', '0.1', '0.661', '0.661'])
 t.add_row(['CAS - 512bitsUnhashed', '10', '.01', '0.823', 'TBC'])
 print(t)
 '''
