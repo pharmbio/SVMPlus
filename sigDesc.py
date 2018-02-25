@@ -299,7 +299,7 @@ def svmPlusOnMorganDataset(svmFile, svmPlusFile, C=10, gamma=.01,
 
 
 # some settings before experiment
-DATASET = BURSI
+DATASET = CAS
 svmFilename = phyChemFile[DATASET]
 svmPlusFilename = morganUnhashedFiles[DATASET]
 tunedKParam = tunedParam[DATASET][0]
@@ -326,16 +326,16 @@ if __name__ == "__main__":
     '''
     
     svmPlusOnMorganDataset(svmFilename, svmPlusFilename,
-                          C=1, gamma=.1,
+                          C=1, gamma=.01,
                           kernelParam=tunedKParam,
                           kernelParamStar=tunedKStarParam)
 
     svmPlusOnMorganDataset(svmFilename, svmPlusFilename,
-                          C=10, gamma=.1,
+                          C=10, gamma=.01,
                           kernelParam=tunedKParam,
                           kernelParamStar=tunedKStarParam)
 
     svmPlusOnMorganDataset(svmFilename, svmPlusFilename,
-                          C=100, gamma=.1,
+                          C=100, gamma=.01,
                           kernelParam=tunedKParam,
                           kernelParamStar=tunedKStarParam)

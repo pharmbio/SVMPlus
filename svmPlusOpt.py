@@ -131,3 +131,5 @@ def project(X, clf):
 def predict(X, clf):
     return np.sign(project(X, clf))
 
+def decision_function(X, clf):
+    return project(X, clf)
