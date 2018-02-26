@@ -12,3 +12,6 @@ svmResults/
 svmPlusResults/
 .idea/SVMPlus.iml
 .idea/modules.xml
+icpWithSVMPlusResults/
+icpWithSVMResults/
+

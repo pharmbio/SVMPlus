@@ -30,7 +30,7 @@ CAS = 2
 # tuned kernel parameters
 tunedParam = [[.1, .01],  # BURSI
               [.01, .01],  # MMP
-              [.01, .01]]  # CAS
+              [.01, .001]]  # CAS #[.01, .01]]  # CAS
 
 
 # tuned kernel parameters
@@ -217,7 +217,7 @@ def ICPWithSVM(svmFile, C=10, gamma=.01):
             # open again
     ofile.write("C = %f, gamma = %f, errRate = %f, eff = %f, val = %f, obsFuzz = %f \n" %
                     (C, gamma, errRate, eff, val, obsFuzz))
-    sigLevels = np.linspace(0, .99, 10)
+    sigLevels = np.linspace(0, .95, 10)
     ofile.write("C = %f, gamma = %f, \n" % (C, gamma))
     for i in range(1, len(sigLevels)):
         errRate, eff, val, obsFuzz = pm.pValues2PerfMetrics(pValues, y_test, sigLevels[i])
@@ -265,7 +265,7 @@ def ICPWithSVMPlus(svmFile, svmPlusFile, C=10, gamma=.01,
                                     K = kernelParam, KStar= kernelParamStar)
     y_test[y_test == -1] = 0
 
-    sigLevels = np.linspace(0, .99, 10)
+    sigLevels = np.linspace(0, .95, 10)
     ofile.write("C = %f, gamma = %f, \n" %(C, gamma))
     for i in range(1, len(sigLevels)):
         errRate, eff, val, obsFuzz = pm.pValues2PerfMetrics(pValues, y_test, sigLevels[i])
@@ -291,9 +291,10 @@ if __name__ == "__main__":
     #    gridSearchWithValidation(fileName)
     #for fileName in morganUnhashedFiles:
     #    gridSearchSVMPlus(fileName)
-    #svmOnMorganDataset(svmFilename, C=10, gamma=.1)
-
+    ICPWithSVMPlus(svmFilename, svmFilename, C=10, gamma=.01,
+                   kernelParam=tunedKParam, kernelParamStar=tunedKStarParam)
     #ICPWithSVM(svmFilename, C = tunedCosts[DATASET], gamma = tunedKParam)
+    '''
     ICPWithSVMPlus(svmFilename, svmFilename, C = 1, gamma= .1,
                    kernelParam = tunedKParam, kernelParamStar=tunedKStarParam)
     ICPWithSVMPlus(svmFilename, svmFilename, C=10, gamma=.1,
@@ -306,8 +307,8 @@ if __name__ == "__main__":
                    kernelParam=tunedKParam, kernelParamStar=tunedKStarParam)
     ICPWithSVMPlus(svmFilename, svmFilename, C=100, gamma=.01,
                    kernelParam=tunedKParam, kernelParamStar=tunedKStarParam)
+
     
-    '''
     #pending for tuning
     gridSearchWithCV(morganUnhashedFiles[0])
     gridSearchWithCV(morganUnhashedFiles[1])

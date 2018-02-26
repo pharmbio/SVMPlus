@@ -128,12 +128,13 @@ def SVMPlusICP(X, y, XStar, X_testData,
     if XStar is None :
         sys.exit("\n 'XStar' is required as input\n")
 
-    X_properTrain, X_calib, y_properTrain, y_calib = \
-        train_test_split(X, y, test_size=0.2,
+    X_properTrain, X_calib, y_properTrain, y_calib, indices_train, indices_test = \
+        train_test_split(X, y, range(len(X)), test_size=0.2,
                          stratify=y, random_state=7)
+    XStar_train = XStar[indices_train]
 
-    clf = svmPlus.svmPlusOpt(X_properTrain, y_properTrain, XStar=XStar,
-                             #C=C, gamma=gamma,
+    clf = svmPlus.svmPlusOpt(X_properTrain, y_properTrain, XStar=XStar_train,
+                             C=C, gamma=gamma,
                              kernel="rbf", kernelParam = K,
                              kernelStar="rbf", kernelStarParam = KStar)
     MCListConfScores = computeNCSVMPlus(clf, X_calib, y_calib)
