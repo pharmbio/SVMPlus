@@ -89,19 +89,28 @@ def computePValues(MCListConfScores, testConfScores):
 
 def ICPClassification(X, y, X_testData,
                       C = 10, gamma = .01,
-                      XStar = None, K = 10, KStar = .01):
+                      XStar = None, K = 10, KStar = .01,
+                      X_calib = None, y_calib = None):
     if (X is None) or (X_testData is None):
         sys.exit("\n 'trainingSet' and 'testSet' are required as input\n")
 
-    if XStar is not None:
-        return SVMPlusICP(X, y, XStar, X_testData,
-                          C, gamma, K = K, KStar = KStar)
-        
-    X_properTrain, X_calib, y_properTrain, y_calib = \
-        train_test_split(X, y, test_size=0.2,
-                         stratify=y, random_state=7)
+    if X_calib is None:
+        X_properTrain, X_calib, y_properTrain, y_calib, indices_train, indices_test =\
+            train_test_split(X, y, range(len(X)) ,test_size=0.2,
+                             stratify=y, random_state=7)
+        if XStar is not None:
+            XStar_train = XStar[indices_train]
 
-    # commented, this was using the prediction probability
+    else:
+        X_properTrain = X
+        y_properTrain = y
+        XStar_train = XStar
+
+    if XStar is not None:
+        return SVMPlusICP(X_properTrain, y_properTrain, XStar_train, X_testData,
+                          C, gamma, K=K, KStar=KStar,
+                          X_calib=X_calib, y_calib=y_calib)
+        # commented, this was using the prediction probability
     '''
     model = svm.SVC(gamma=gamma, C=C, probability=True)
     model.fit(X_properTrain , y_properTrain)
@@ -122,16 +131,10 @@ def ICPClassification(X, y, X_testData,
     return pValues
 
 
-def SVMPlusICP(X, y, XStar, X_testData,
+def SVMPlusICP(X_properTrain, y_properTrain, XStar_train, X_testData,
                C = 10, gamma = .01,
-               K = 10, KStar = .01):
-    if XStar is None :
-        sys.exit("\n 'XStar' is required as input\n")
-
-    X_properTrain, X_calib, y_properTrain, y_calib, indices_train, indices_test = \
-        train_test_split(X, y, range(len(X)), test_size=0.2,
-                         stratify=y, random_state=7)
-    XStar_train = XStar[indices_train]
+               K = 10, KStar = .01,
+               X_calib=None, y_calib=None):
 
     clf = svmPlus.svmPlusOpt(X_properTrain, y_properTrain, XStar=XStar_train,
                              C=C, gamma=gamma,
