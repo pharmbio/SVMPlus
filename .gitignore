@@ -14,4 +14,7 @@ svmPlusResults/
 .idea/modules.xml
 icpWithSVMPlusResults/
 icpWithSVMResults/
+gridValidationResults/
+testCode/MNISTDataset.py
+data/
 

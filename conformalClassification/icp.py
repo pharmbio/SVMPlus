@@ -96,7 +96,7 @@ def ICPClassification(X, y, X_testData,
 
     if X_calib is None:
         X_properTrain, X_calib, y_properTrain, y_calib, indices_train, indices_test =\
-            train_test_split(X, y, range(len(X)) ,test_size=0.2,
+            train_test_split(X, y, range(len(X)) ,test_size=0.5,
                              stratify=y, random_state=7)
         if XStar is not None:
             XStar_train = XStar[indices_train]

@@ -36,7 +36,7 @@ def resizeImage(image):
 
 # Reads original MNIST data and stores images only for digits 5 and 8
 def preProcessMNISTData():
-    mndata = MNIST('MNISTData')
+    mndata = MNIST('/home/niharika/PycharmProjects/SVMPlus/data')
     train_data,  y_train = mndata.load_training()
     #test_data,  y_test = mndata.load_testing()
 
@@ -51,14 +51,14 @@ def preProcessMNISTData():
     X = np.vstack((dataClass1, dataClass2))
     print(X.shape)
     y = np.concatenate((np.ones(nClass1), -np.ones(nClass2)))
-    np.savetxt("data/mnistData.csv", X, delimiter=",")
-    np.savetxt("data/mnistLabel.csv", y, delimiter=",")
+    np.savetxt("/home/niharika/PycharmProjects/SVMPlus/data/mnistData.csv", X, delimiter=",")
+    np.savetxt("/home/niharika/PycharmProjects/SVMPlus/data/mnistLabel.csv", y, delimiter=",")
 
 
 # to test if the above function correctly stored the digits 5 and 8
 # and run svm on the data
 def testMNIST():
-    ifile = open("data/mnistData.csv")
+    ifile = open("/home/niharika/PycharmProjects/SVMPlus/data/mnistData.csv")
     reader = csv.reader(ifile)
     a = []
     for row in reader:
@@ -68,7 +68,7 @@ def testMNIST():
     X = np.array([ x for x in a]).astype(float)
     print(X.shape)
 
-    ifile = open("data/mnistLabel.csv")
+    ifile = open("/home/niharika/PycharmProjects/SVMPlus/data/mnistLabel.csv")
     reader = csv.reader(ifile)
     a = []
     for row in reader:
@@ -116,7 +116,7 @@ def testMNIST():
 # resize the original 28by28 images into 10by10 images
 # and save it in a file
 def resizeMNISTData():
-    ifile = open("data/mnistData.csv")
+    ifile = open("/home/niharika/PycharmProjects/SVMPlus/data/mnistData.csv")
     reader = csv.reader(ifile)
     a = []
     for row in reader:
@@ -127,11 +127,11 @@ def resizeMNISTData():
     #resizeImage(X[0])
     #for i in range(len(X)):
     X_resized = np.array([resizeImage(x) for x in X])
-    np.savetxt("data/mnistResizedData.csv", X_resized, delimiter=",")
+    np.savetxt("/home/niharika/PycharmProjects/SVMPlus/data/mnistResizedData.csv", X_resized, delimiter=",")
 
 
 def testResizedMNISTDataset():
-    ifile = open("data/mnistResizedData.csv")
+    ifile = open("/home/niharika/PycharmProjects/SVMPlus/data/mnistResizedData.csv")
     reader = csv.reader(ifile)
     a = []
     for row in reader:
@@ -140,7 +140,7 @@ def testResizedMNISTDataset():
     ifile.close()
     X = np.array([x for x in a]).astype(float)
 
-    ifile = open("data/mnistLabel.csv")
+    ifile = open("/home/niharika/PycharmProjects/SVMPlus/data/mnistLabel.csv")
     reader = csv.reader(ifile)
     a = []
     for row in reader:
@@ -183,7 +183,7 @@ def testResizedMNISTDataset():
 
 # run SVM on X, SVM on XStar and SVM+ on X (using XStar as prib-info)
 def testSVMPlusMNISTDataset():
-    ifile = open("data/mnistResizedData.csv")
+    ifile = open("/home/niharika/PycharmProjects/SVMPlus/data/mnistResizedData.csv")
     reader = csv.reader(ifile)
     a = []
     for row in reader:
@@ -192,7 +192,7 @@ def testSVMPlusMNISTDataset():
     ifile.close()
     X = np.array([x for x in a]).astype(float)
 
-    ifile = open("data/mnistLabel.csv")
+    ifile = open("/home/niharika/PycharmProjects/SVMPlus/data/mnistLabel.csv")
     reader = csv.reader(ifile)
     a = []
     for row in reader:
@@ -224,7 +224,7 @@ def testSVMPlusMNISTDataset():
     print("number of test error = %d, test size = %d" % (len(y_predict) - correct, len(y_predict)))
 
     #Read XStar
-    ifile = open("data/mnistData.csv")
+    ifile = open("/home/niharika/PycharmProjects/SVMPlus/data/mnistData.csv")
     reader = csv.reader(ifile)
     a = []
     for row in reader:
@@ -254,6 +254,62 @@ def testSVMPlusMNISTDataset():
     print("Prediction accuracy of SVM+ on X using XStar as priv-info")
     print("number of test error = %d, test size = %d" %(len(y_predict) - correct, len(y_predict)))
 
-#preProcessMNISTData()
-#resizeMNISTData()
-testSVMPlusMNISTDataset()
+
+def loadMNISTData():
+    ifile = open("/home/niharika/PycharmProjects/SVMPlus/data/mnistResizedData.csv")
+    reader = csv.reader(ifile)
+    a = []
+    for row in reader:
+        newRow = [float(val) for val in row]
+        a.append(newRow)
+    ifile.close()
+    X = np.array([x for x in a]).astype(float)
+
+    ifile = open("/home/niharika/PycharmProjects/SVMPlus/data/mnistLabel.csv")
+    reader = csv.reader(ifile)
+    a = []
+    for row in reader:
+        a.append(row)
+    ifile.close()
+    y = np.array(a).astype(float).reshape(1, 11272)
+    y = np.array([x for x in y]).astype(int)
+    y = y[0]
+
+    dataClass1 = X[y == -1]
+    # nClass1 = len(dataClass1)
+    dataClass2 = X[y == 1]
+    # nClass2 = len(dataClass2)
+
+        # 50+50 for training
+    nSample = 50
+    testSize = 500
+    validSize = 500
+    X_train = np.vstack((dataClass1[:nSample], dataClass2[:nSample]))
+    X_test = np.vstack((dataClass1[nSample:(nSample + testSize)], dataClass2[nSample:(nSample + testSize)]))
+    X_valid = np.vstack((dataClass1[(nSample + testSize):(nSample+1000)],
+                         dataClass2[(nSample + testSize):(nSample+1000)]))
+    y_train = np.concatenate((-np.ones(nSample), np.ones(nSample)))
+    y_test = np.concatenate((-np.ones(testSize), np.ones(testSize)))
+    y_valid = np.concatenate((-np.ones(validSize), np.ones(validSize)))
+
+    # Read XStar
+    ifile = open("/home/niharika/PycharmProjects/SVMPlus/data/mnistData.csv")
+    reader = csv.reader(ifile)
+    a = []
+    for row in reader:
+        newRow = [float(val) for val in row]
+        a.append(newRow)
+    ifile.close()
+    XStar = np.array([x for x in a]).astype(float)
+    dataClass1 = XStar[y == -1]
+    dataClass2 = XStar[y == 1]
+    XStar_train = np.vstack((dataClass1[:nSample], dataClass2[:nSample]))
+    XStar_test = np.vstack((dataClass1[nSample:(nSample + testSize)], dataClass2[nSample:(nSample + testSize)]))
+    XStar_valid = np.vstack((dataClass1[(nSample + testSize):(nSample + 1000)],
+                         dataClass2[(nSample + testSize):(nSample + 1000)]))
+    return X_train, X_test, y_train, y_test, XStar_train, XStar_test, X_valid, y_valid, XStar_valid
+
+if __name__ == "__main__":
+    preProcessMNISTData()
+    resizeMNISTData()
+    testSVMPlusMNISTDataset()
