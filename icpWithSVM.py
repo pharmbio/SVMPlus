@@ -30,13 +30,19 @@ CAS = 1
 MMP = 2
 
 # tuned kernel parameters
-tunedParam = [[.1, .01],  # BURSI
-              [.1, .01],  # MMP
-              [.1, .01]]  # CAS #[.01, .01]]  # CAS
+tunedSVMPhysChecm = [[10, .1],  # BURSI: or 1, .1
+              [100, .1],  # CAS or 100 .01
+              [.1, .01]]  # MMP, not yet tuned
 
 
 # tuned kernel parameters
-tunedCosts = [100, 10, 100]  # CAS
+tunedSVMMorgan = [[10, .001], #1000, .0001
+              [1, .01], #10, .01
+              [100, 100]] # MMP, not yet tuned
+
+tunedSVMPlus = [[10, .001], #BURSI
+                [1, .001], # CAS
+                [10, .001]]  # MMP, not yet tuned
 
 def prepareDataset(fileName):
     path = str("MorganDataset/"+fileName)
@@ -76,7 +82,7 @@ def gridSearchSVMPlus(svmFile, svmPlusFile,
     X_train, X_test, X_valid, y_train, y_test, y_valid = prepareDataset(svmFile)
     XStar_train, XStar_test, XStar_valid, yStar_train, yStar_test, yStar_valid = prepareDataset(svmFile)
     tune.gridSearchSVMPlus(X_train, X_test, X_valid, y_train, y_test, y_valid,
-                           XStar_train, svmFile, kernelParam=0.0001, kernelParamStar=0.01)
+                           XStar_train, svmFile, kernelParam= kernelParam, kernelParamStar= kernelParamStar)
 
 
 # run SVM for finger print descriptor file
@@ -93,6 +99,7 @@ def ICPWithSVM(svmFile, C=10, gamma=.01):
     # ICP
     pValues = icp.ICPClassification(X_train, y_train, X_test,
                                     X_calib=X_valid, y_calib=y_valid)
+    y_test = y_test.astype(int)
     y_test[y_test == -1] = 0
 
     errRate, eff, val, obsFuzz = pm.pValues2PerfMetrics(pValues, y_test)
@@ -114,7 +121,7 @@ def ICPWithSVMPlus(svmFile, svmPlusFile, C=10, gamma=.01,
     XStar_train, XStar_test, XStar_valid, yStar_train, yStar_test, yStar_valid = \
         prepareDataset(svmPlusFile)
 
-    dirPath = "icpWithSVMResults/"
+    dirPath = "icpWithSVMPlusResults/"
     if not os.path.exists(dirPath):
         os.makedirs(dirPath)
     ofile = open(dirPath + svmFile, "a")
@@ -125,6 +132,7 @@ def ICPWithSVMPlus(svmFile, svmPlusFile, C=10, gamma=.01,
                                     XStar = XStar_train, C = C, gamma= gamma,
                                     K = kernelParam, KStar= kernelParamStar,
                                     X_calib=X_valid, y_calib=y_valid)
+    y_test = y_test.astype(int)
     y_test[y_test == -1] = 0
 
     errRate, eff, val, obsFuzz = pm.pValues2PerfMetrics(pValues, y_test)
@@ -144,49 +152,33 @@ def ICPWithSVMPlus(svmFile, svmPlusFile, C=10, gamma=.01,
 DATASET = CAS
 svmFilename = phyChemFile[DATASET]
 svmPlusFilename = morganUnhashedFiles[DATASET]
-tunedKParam = tunedParam[DATASET][0]
-tunedKStarParam = tunedParam[DATASET][1]
+tunedKParam = tunedSVMPhysChecm[DATASET][1]
+tunedKStarParam = tunedSVMMorgan[DATASET][1]
 
 if __name__ == "__main__":
     # readDetailsDescriptorFiles()
-
+    '''
     #tune SVM parameters
     for i in range(2):
         gridSearchWithValidation(phyChemFile[i])
         gridSearchWithValidation(morganUnhashedFiles[i])
-
+    '''
     # tune SVM plus parameters
     for i in range(2):
-        gridSearchWithValidation(phyChemFile[i])
-        gridSearchWithValidation(morganUnhashedFiles[i])
-    
+        gridSearchSVMPlus(phyChemFile[i], morganUnhashedFiles[i],
+                          kernelParam=tunedKParam, kernelParamStar=tunedKStarParam)
+
+
     '''
-    val, obsFuzz = ICPWithSVM(svmFilename, C=100, gamma=.01)
+    val, obsFuzz = ICPWithSVM(svmFilename,
+                              C=tunedSVMPhysChecm[DATASET][0], gamma=tunedSVMPhysChecm[DATASET][1])
     t = PrettyTable(['Dataset-BURSI', 'M/L Method', 'Validity', 'Obs-fuzziness'])
     t.add_row(['phys-chem', 'SVM', val, obsFuzz])
-    val, obsFuzz = ICPWithSVM(svmPlusFilename, C=10, gamma=.01)
+    val, obsFuzz = ICPWithSVM(svmPlusFilename, C=tunedSVMMorgan[DATASET][0], gamma=tunedSVMMorgan[DATASET][1])
     t.add_row(['morgan', 'SVM', val, obsFuzz])
-    val, obsFuzz = ICPWithSVMPlus(svmFilename, svmPlusFilename, C=100, gamma=.1,
-                   kernelParam=tunedKParam, kernelParamStar=tunedKStarParam)
+    val, obsFuzz = ICPWithSVMPlus(svmFilename, svmPlusFilename,
+                C=tunedSVMPlus[DATASET][0], gamma=tunedSVMPlus[DATASET][1],
+                kernelParam=tunedSVMPhysChecm[DATASET][1], kernelParamStar=tunedSVMMorgan[DATASET][1])
     t.add_row(['phys-chem+morgan', 'SVM+', val, obsFuzz])
     print(t)
-    
-    ICPWithSVMPlus(svmFilename, svmFilename, C = 1, gamma= .1,
-                   kernelParam = tunedKParam, kernelParamStar=tunedKStarParam)
-    ICPWithSVMPlus(svmFilename, svmFilename, C=10, gamma=.1,
-                   kernelParam=tunedKParam, kernelParamStar=tunedKStarParam)
-    ICPWithSVMPlus(svmFilename, svmFilename, C=100, gamma=.1,
-                   kernelParam=tunedKParam, kernelParamStar=tunedKStarParam)
-    ICPWithSVMPlus(svmFilename, svmFilename, C=1, gamma=.01,
-                   kernelParam=tunedKParam, kernelParamStar=tunedKStarParam)
-    ICPWithSVMPlus(svmFilename, svmFilename, C=10, gamma=.01,
-                   kernelParam=tunedKParam, kernelParamStar=tunedKStarParam)
-    ICPWithSVMPlus(svmFilename, svmFilename, C=100, gamma=.01,
-                   kernelParam=tunedKParam, kernelParamStar=tunedKStarParam)
-
-    
-    #pending for tuning
-    gridSearchWithCV(morganUnhashedFiles[0])
-    gridSearchWithCV(morganUnhashedFiles[1])
-    gridSearchWithCV(morganUnhashedFiles[2])
     '''
