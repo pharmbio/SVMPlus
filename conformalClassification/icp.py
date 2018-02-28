@@ -42,7 +42,7 @@ def computeNC(modelFit,  X_calib, y_calib):
     MCListConfScores = []  # Moderian Class wise List of conformity scores
     for i in range(0, len(classLabels)):
         clsIndex = np.where(y_calib == classLabels[i])
-        classMembers = classLabels[i] * scores[clsIndex]
+        classMembers = - classLabels[i] * scores[clsIndex]
         MCListConfScores.append(classMembers)#MCListConfScores[i]+ classMembers.tolist()[0]
 
     return MCListConfScores
@@ -59,7 +59,7 @@ def computeNCSVMPlus(clf,  X_calib, y_calib):
     MCListConfScores = []  # Moderian Class wise List of conformity scores
     for i in range(0, len(classLabels)):
         clsIndex = np.where(y_calib == classLabels[i])
-        classMembers = classLabels[i] * scores[clsIndex]
+        classMembers = - classLabels[i] * scores[clsIndex]
         MCListConfScores.append(classMembers)#MCListConfScores[i]+ classMembers.tolist()[0]
 
     return MCListConfScores
@@ -79,7 +79,7 @@ def computePValues(MCListConfScores, testConfScores):
         for l in range(0, nClasses):
             alpha = classLabels[l] * testConfScores[k]
             classConfScores = MCListConfScores[l]
-            pVal = len(classConfScores[np.where(classConfScores < alpha)]) + (np.random.uniform(0, 1, 1) * \
+            pVal = len(classConfScores[np.where(classConfScores > alpha)]) + (np.random.uniform(0, 1, 1) * \
                 len(classConfScores[np.where(classConfScores == alpha)]))
             pValues[k, l] = pVal/(len(classConfScores) + 1)
 

@@ -43,7 +43,8 @@ def loadDataset(fileName, split=False, returnIndices = False):
     file.close()
 
     n = len(data) # number of observations
-    X = np.array([x[11:21] for x in data]).astype(float)
+    #X = np.array([x[11:21] for x in data]).astype(float)
+    X = np.array([x[27:32] for x in data]).astype(float)
     y = np.array([x[0] for x in data]).astype(np.int) #labels
 
     del data # free up the memory
@@ -65,6 +66,8 @@ def loadDataset(fileName, split=False, returnIndices = False):
             X_test = reg_scaler.transform(X_test)
             return X_train, X_test, y_train, y_test
     else:
+        reg_scaler = prep.StandardScaler().fit(X)
+        X = reg_scaler.transform(X)
         return X, y
 
 

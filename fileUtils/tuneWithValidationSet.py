@@ -84,7 +84,7 @@ def gridSearchWithValidation(X_train, X_test, X_valid, y_train, y_test, y_valid,
 # run SVM+ for sign descriptor files
 def gridSearchSVMPlus(X_train, X_test, X_valid, y_train, y_test, y_valid, XStar_train, logFile,
                       kernelParam=0.0001, kernelParamStar=0.01):
-    paramC = [.1, 1, 10]
+    paramC = [.1, 1, 10, 100]
     paramGamma = [1e-3, 1e-2, .1]
     
     dirPath = "gridValidationResults/"
