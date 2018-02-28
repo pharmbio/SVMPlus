@@ -30,8 +30,8 @@ CAS = 1
 MMP = 2
 
 # tuned kernel parameters
-tunedSVMPhysChem = [[10, .1],  # BURSI: or 1, .1
-              [100, .1],  # CAS or 100 .01
+tunedSVMPhysChem = [ [1000, .01], #[100, .00001], #[10, .1],  # BURSI: or 1, .1
+              [1000, .1],  # CAS or 100 .01
               [10, .01]]  # MMP
 
 
@@ -40,8 +40,8 @@ tunedSVMMorgan = [[10, .001], #1000, .0001
               [1,.01], #10, .01
               [100, .01]] # MMP, not yet tuned
 
-tunedSVMPlus = [[1, .001], #BURSI
-                [10, .001], # CAS
+tunedSVMPlus = [[10, .01],#[1, .001], #BURSI
+                [1000, .01], #[10, .001], # CAS
                 [10, .001]]  # MMP, not yet tuned
 
 def prepareDataset(fileName):
@@ -148,7 +148,7 @@ def ICPWithSVMPlus(svmFile, svmPlusFile, C=10, gamma=.01,
 
 
 # some settings before experiment
-DATASET = BURSI
+DATASET = CAS
 svmFilename = phyChemFile[DATASET]
 svmPlusFilename = morganUnhashedFiles[DATASET]
 tunedKParam = tunedSVMPhysChem[DATASET][1]
@@ -159,10 +159,20 @@ if __name__ == "__main__":
 
     #tune SVM parameters
     #for i in range(2):
-    gridSearchWithValidation(phyChemFile[DATASET])
+    #gridSearchWithValidation(phyChemFile[DATASET])
+   
+    #gridSearchSVMPlus(phyChemFile[DATASET], morganUnhashedFiles[DATASET],
+    #                  kernelParam=tunedSVMPhysChem[DATASET][1],
+    #                  kernelParamStar=tunedSVMMorgan[DATASET][1])
+
+    #gridSearchWithValidation(phyChemFile[2])
+    #gridSearchWithValidation(morganUnhashedFiles[2])
     '''
-    gridSearchWithValidation(phyChemFile[2])
-    gridSearchWithValidation(morganUnhashedFiles[2])
+    val, obsFuzz = ICPWithSVM(svmFilename,
+                              C=1000, gamma=.01)
+    t = PrettyTable(['Dataset-BURSI', 'M/L Method', 'Validity', 'Obs-fuzziness'])
+    t.add_row(['phys-chem', 'SVM', val, obsFuzz])
+    print(t)
     
     # tune SVM plus parameters
     for i in range(2):
@@ -170,18 +180,22 @@ if __name__ == "__main__":
                           kernelParam=tunedSVMPhysChem[i][1], 
                           kernelParamStar=tunedSVMMorgan[i][1])
 
-
     
+    '''
+
     val, obsFuzz = ICPWithSVM(svmFilename,
                               C=tunedSVMPhysChem[DATASET][0], gamma=tunedSVMPhysChem[DATASET][1])
     t = PrettyTable(['Dataset-BURSI', 'M/L Method', 'Validity', 'Obs-fuzziness'])
     t.add_row(['phys-chem', 'SVM', val, obsFuzz])
+
+    
     val, obsFuzz = ICPWithSVM(svmPlusFilename, C=tunedSVMMorgan[DATASET][0], gamma=tunedSVMMorgan[DATASET][1])
     t.add_row(['morgan', 'SVM', val, obsFuzz])
     val, obsFuzz = ICPWithSVMPlus(svmFilename, svmPlusFilename,
                 C=tunedSVMPlus[DATASET][0], gamma=tunedSVMPlus[DATASET][1],
                 kernelParam=tunedSVMPhysChem[DATASET][1], kernelParamStar=tunedSVMMorgan[DATASET][1])
     t.add_row(['phys-chem+morgan', 'SVM+', val, obsFuzz])
+
     print(t)
-    '''
+
 

@@ -43,8 +43,8 @@ def loadDataset(fileName, split=False, returnIndices = False):
     file.close()
 
     n = len(data) # number of observations
-    #X = np.array([x[11:21] for x in data]).astype(float)
-    X = np.array([x[27:32] for x in data]).astype(float)
+    X = np.array([x[11:21] for x in data]).astype(float)
+    #X = np.array([x[1:30] for x in data]).astype(float)
     y = np.array([x[0] for x in data]).astype(np.int) #labels
 
     del data # free up the memory
