@@ -101,7 +101,6 @@ def gridSearchSVMPlus(X_train, X_test, y_train, y_test, XStar_train, logFile,
         os.makedirs(dirPath)
     ofile = open(dirPath + "SVMPlus_" + logFile, "a")
     ofile.write("Size of the train set: " + str(X_train.shape[0]) + "\n")
-    ofile.write("Size of the validation set: " + str(X_valid.shape[0]) + "\n")
     ofile.write("Size of the test set: " + str(X_test.shape[0]) + "\n")
     ofile.close()  # store file size and close, then open again
 
@@ -109,7 +108,7 @@ def gridSearchSVMPlus(X_train, X_test, y_train, y_test, XStar_train, logFile,
     index = []
     n_splits = 5
     cv = StratifiedKFold(n_splits=n_splits)
-    folds = [[train_index, test_index] for train_index, test_index in cv.split(X, y)]
+    folds = [[train_index, test_index] for train_index, test_index in cv.split(X_train, y_train)]
 
     for i in range(len(paramC)):
         for j in range(len(paramGamma)):

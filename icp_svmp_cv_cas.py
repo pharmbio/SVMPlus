@@ -114,7 +114,7 @@ def ICPWithSVMPlus(svmFile, svmPlusFile, C=10, gamma=.01,
 # some settings before experiment
 
 if __name__ == "__main__":
-    gridSearchWithCV(phyChemFile)
+    #gridSearchWithCV(phyChemFile)
     gridSearchWithCV(morganUnhashedFiles)
     '''
     # tune SVM/SVM+ parameters
