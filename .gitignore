@@ -17,4 +17,5 @@ icpWithSVMResults/
 gridValidationResults/
 testCode/MNISTDataset.py
 data/
+gridSearchResults/
 

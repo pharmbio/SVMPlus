@@ -9,7 +9,7 @@ from prettytable import PrettyTable
 
 phyChemFile = "nr-ahr_nosalt.sdf.std_nodupl_class.sdf_descriptors.csv"
 
-morganUnhashedFiles = "nr-ahr_nosalt.sdf.std_nodupl_class.sdf_descriptors.csv"
+morganUnhashedFiles = "nr-ahr_nosalt.sdf.std_nodupl_class.sdf_SVMLIGHT_UNHASHED_radius_3.csv"
 
 # tuned SVM C/kernel parameters
 tunedSVMPhysChem = [1000, .1]# [10, .01]
@@ -114,7 +114,7 @@ def ICPWithSVMPlus(svmFile, svmPlusFile, C=10, gamma=.01,
 # some settings before experiment
 
 if __name__ == "__main__":
-    gridSearchWithCV(phyChemFile)
+    #gridSearchWithCV(phyChemFile)
     gridSearchWithCV(morganUnhashedFiles)
     '''
     # tune SVM/SVM+ parameters
