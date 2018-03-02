@@ -19,7 +19,8 @@ def gridSearchWithValidation(X_train, X_test, X_valid, y_train, y_test, y_valid,
     paramC = [1, 10, 100, 1000]
     #paramC = [1.0, 2.154434690031884, 4.641588833612778, 10.0, 21.544346900318832, 46.4158883361278, 100.0, 215.44346900318845,
     # 464.15888336127773, 1000.0]
-    paramGamma = [1e-5, 1e-4, 1e-3, 1e-2, .1]
+    #paramGamma = [1e-5, 1e-4, 1e-3, 1e-2, .1]
+    paramGamma = [1e-7, 1e-6, 1e-5]
     #paramGamma = [1e-05, 4.641588833612782e-06, 2.1544346900318822e-06, 1e-06, 4.641588833612782e-07, 2.1544346900318822e-07, 1e-07,
      #4.641588833612773e-08, 2.1544346900318866e-08, 1e-08]
 
@@ -89,7 +90,7 @@ def gridSearchWithValidation(X_train, X_test, X_valid, y_train, y_test, y_valid,
 def gridSearchSVMPlus(X_train, X_test, X_valid, y_train, y_test, y_valid, XStar_train, logFile,
                       kernelParam=0.0001, kernelParamStar=0.01):
     paramC = [1, 10, 100, 1000]
-    paramGamma = [1e-3, 1e-2, .1]
+    paramGamma = [1e-5,1e-4, 1e-3, 1e-2, .1, 1]
     
     dirPath = "gridValidationResults/"
     if not os.path.exists(dirPath):

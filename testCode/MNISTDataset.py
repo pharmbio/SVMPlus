@@ -44,13 +44,13 @@ def preProcessMNISTData():
     train_label = np.array(y_train)
 
     dataClass1 = train_data[train_label == 5]
-    nClass1 = len(dataClass1)
+    nClass1 = 2000 #len(dataClass1)
     dataClass2 = train_data[train_label == 8]
-    nClass2 = len(dataClass2)
+    nClass2 = 2000 #len(dataClass2)
 
-    X = np.vstack((dataClass1, dataClass2))
+    X = np.vstack((dataClass1[:2000], dataClass2[:2000]))
     print(X.shape)
-    y = np.concatenate((np.ones(nClass1), -np.ones(nClass2)))
+    y = np.concatenate((-np.ones(nClass1), np.ones(nClass2)))
     np.savetxt("/home/niharika/PycharmProjects/SVMPlus/data/mnistData.csv", X, delimiter=",")
     np.savetxt("/home/niharika/PycharmProjects/SVMPlus/data/mnistLabel.csv", y, delimiter=",")
 
@@ -74,7 +74,8 @@ def testMNIST():
     for row in reader:
         a.append(row)
     ifile.close()
-    y = np.array(a).astype(float).reshape(1, 11272)
+    #y = np.array(a).astype(float).reshape(1, 11272)
+    y = np.array(a).astype(float).reshape(1, 4000)
     y = np.array([ x for x in y]).astype(int)
     y = y[0]
     print(y)
@@ -198,7 +199,8 @@ def testSVMPlusMNISTDataset():
     for row in reader:
         a.append(row)
     ifile.close()
-    y = np.array(a).astype(float).reshape(1, 11272)
+    #y = np.array(a).astype(float).reshape(1, 11272)
+    y = np.array(a).astype(float).reshape(1, 4000)
     y = np.array([x for x in y]).astype(int)
     y = y[0]
 
@@ -271,7 +273,8 @@ def loadMNISTData():
     for row in reader:
         a.append(row)
     ifile.close()
-    y = np.array(a).astype(float).reshape(1, 11272)
+    #y = np.array(a).astype(float).reshape(1, 11272)
+    y = np.array(a).astype(float).reshape(1, 4000)
     y = np.array([x for x in y]).astype(int)
     y = y[0]
 

@@ -3,12 +3,106 @@ import matplotlib.pyplot as plt
 import numpy as np
 import matplotlib.pyplot as plt
 
-# Comparing validiy and obs-fuzz using SVM and SVMPlus
-t = PrettyTable(['Dataset-BURSI', 'M/L Method', 'Validity', 'Obs-fuzziness'])
-t.add_row(['MorganUnhashed', 'SVM', '', ''])
-t.add_row(['physchem', 'SVM', '.17', '.26'])
-t.add_row(['physchem+MorganUnhashed', 'SVM+', '.12', '22'])
-print(t)
+"""
+========
+Barchart
+========
+
+A bar plot with errorbars and height labels on individual bars
+"""
+import numpy as np
+import matplotlib.pyplot as plt
+
+
+N = 4
+svmX = (0.033359, 0.3203, 0.3409, 0.2575)
+svmXStar = (0.008681, 0.1260, 0.1605  , 0.1222 )
+svmPlus = (0.008383  , 0.2727 , .3122 , 0.2572  )
+ind = np.arange(N)  # the x locations for the groups
+width = 0.25       # the width of the bars
+
+fig, ax = plt.subplots()
+rects1 = ax.bar(ind, svmX , width, color='pink')
+
+rects2 = ax.bar(ind + width, svmXStar , width, color='y')
+
+rects3 = ax.bar(ind + width+width, svmPlus , width, color='g')
+
+# add some text for labels, title and axes ticks
+ax.set_ylabel('Observed Fuzziness')
+plt.ylim((0, .37))
+ax.set_title('Comparision of efficiency')
+ax.set_xticks(ind + width )
+ax.set_xticklabels(('MNIST', 'BURSI', 'CAS', 'MMP'))
+
+ax.legend((rects1[0], rects2[0], rects3[0]), ('SVM on X', 'SVM on X*', 'SVM on X and X* as PI'))
+
+
+def autolabel(rects):
+    """
+    Attach a text label above each bar displaying its height
+    """
+    for rect in rects:
+        height = rect.get_height()
+        ax.text(rect.get_x() + rect.get_width()/2., 1.05*height,
+                '%d' % int(height),
+                ha='center', va='bottom')
+
+#autolabel(rects1)
+#autolabel(rects2)
+#autolabel(rects3)
+
+plt.show()
+
+
+if 0:
+    N = 4
+    svmX = (.970, 0.671, .588, .850)
+    svmXStar = (.975, .803, .776, .881)
+    svmPlus = (.973, .680, .596, .854)
+    ind = np.arange(N)  # the x locations for the groups
+    width = 0.25       # the width of the bars
+
+    fig, ax = plt.subplots()
+    rects1 = ax.bar(ind, svmX , width, color='pink')
+
+    rects2 = ax.bar(ind + width, svmXStar , width, color='y')
+
+    rects3 = ax.bar(ind + width+width, svmPlus , width, color='g')
+
+    # add some text for labels, title and axes ticks
+    ax.set_ylabel('Prediction Accuracy')
+    plt.ylim((.5, 1))
+    ax.set_title('Comparision of predictive performance')
+    ax.set_xticks(ind + width )
+    ax.set_xticklabels(('MNIST', 'BURSI', 'CAS', 'MMP'))
+
+    ax.legend((rects1[0], rects2[0], rects3[0]), ('SVM on X', 'SVM on X*', 'SVM on X and X* as PI'))
+
+
+    def autolabel(rects):
+        """
+        Attach a text label above each bar displaying its height
+        """
+        for rect in rects:
+            height = rect.get_height()
+            ax.text(rect.get_x() + rect.get_width()/2., 1.05*height,
+                    '%d' % int(height),
+                    ha='center', va='bottom')
+
+    #autolabel(rects1)
+    #autolabel(rects2)
+    #autolabel(rects3)
+
+    plt.show()
+
+if 0:
+    # Comparing validiy and obs-fuzz using SVM and SVMPlus
+    t = PrettyTable(['Dataset-BURSI', 'M/L Method', 'Validity', 'Obs-fuzziness'])
+    t.add_row(['MorganUnhashed', 'SVM', '', ''])
+    t.add_row(['physchem', 'SVM', '.17', '.26'])
+    t.add_row(['physchem+MorganUnhashed', 'SVM+', '.12', '22'])
+    print(t)
 
 
 
