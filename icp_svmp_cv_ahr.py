@@ -11,9 +11,11 @@ phyChemFile = "nr-ahr_nosalt.sdf.std_nodupl_class.sdf_descriptors.csv"
 
 morganUnhashedFiles = "nr-ahr_nosalt.sdf.std_nodupl_class.sdf_SVMLIGHT_UNHASHED_radius_3.csv"
 
+#Tuned values: 10, .01 : .915, 1, .01:914, 100,.01:915, 1000,.01,915
+#
 # tuned SVM C/kernel parameters
 tunedSVMPhysChem = [1000, .1]# [10, .01]
-tunedSVMMorgan = [10, .01]
+tunedSVMMorgan = [1000, .001]
 tunedSVMPlus = [100, .001]
 
 def prepareDataset(svmFile, svmPlusFile = None):

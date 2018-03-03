@@ -124,11 +124,11 @@ def ICPClassification(X, y, X_testData,
     model = svm.SVC(gamma=gamma, C=C)
     model.fit(X_properTrain , y_properTrain)
     MCListConfScores = computeNC(model, X_calib, y_calib)
-    #testConfScores = model.predict_proba(X_testData)
+    y_predict = model.predict(X_testData)
     testConfScores = model.decision_function(X_testData)
     pValues = computePValues(MCListConfScores, testConfScores)
 
-    return pValues
+    return pValues, y_predict
 
 
 def SVMPlusICP(X_properTrain, y_properTrain, XStar_train, X_testData,
@@ -143,7 +143,8 @@ def SVMPlusICP(X_properTrain, y_properTrain, XStar_train, X_testData,
     MCListConfScores = computeNCSVMPlus(clf, X_calib, y_calib)
     testConfScores = svmPlus.decision_function(X_testData, clf)
     pValues = computePValues(MCListConfScores, testConfScores)
+    y_predict = svmPlus.predict(X_testData, clf)
 
-    return pValues
+    return pValues, y_predict
 
 
