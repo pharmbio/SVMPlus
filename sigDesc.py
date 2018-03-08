@@ -10,11 +10,11 @@ import os
 from enum import Enum
 
 
-phyChemFile = ["bursi_nosalts_molsign.sdf.txt_descriptors.csv",
+phyChemFile = ["nr-ahr_nosalt.sdf.std_nodupl_class.sdf_descriptors.csv",
                    "sr-mmp_nosalt.sdf.std_nodupl_class.sdf_descriptors.csv",
                    "smiles_cas_N6512.sdf.std_class.sdf_descriptors.csv"]
 
-morganUnhashedFiles = ["bursi_nosalts_molsign.sdf.txt_SVMLIGHT_Morgan_unhashed_radius_3.csv",
+morganUnhashedFiles = ["nr-ahr_nosalt.sdf.std_nodupl_class.sdf_SVMLIGHT_UNHASHED_radius_3.csv",
                       "sr-mmp_nosalt.sdf.std_nodupl_class.sdf_SVMLIGHT_Morgan_unhashed_radius_3.csv",
                       "smiles_cas_N6512.sdf.std_class.sdf_SVMLIGHT_Morgan_unhashed_radius_3.csv"]
 
@@ -306,7 +306,7 @@ tunedKParam = tunedParam[DATASET][0]
 tunedKStarParam = tunedParam[DATASET][1]
 
 if __name__ == "__main__":
-    #readDetailsDescriptorFiles()
+    readDetailsDescriptorFiles()
     #for fileName in phyChemFile:
     #    gridSearchWithCV(fileName)
     #svmOnMorganDataset(svmFilename, C=10, gamma=.1)
@@ -323,7 +323,7 @@ if __name__ == "__main__":
                           kernelParam = tunedKParam,
                           kernelParamStar = tunedKStarParam)                          
     
-    '''
+    
     
     svmPlusOnMorganDataset(svmFilename, svmPlusFilename,
                           C=1, gamma=.01,
@@ -339,3 +339,4 @@ if __name__ == "__main__":
                           C=100, gamma=.01,
                           kernelParam=tunedKParam,
                           kernelParamStar=tunedKStarParam)
+    '''

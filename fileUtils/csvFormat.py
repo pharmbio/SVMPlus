@@ -11,7 +11,7 @@ def getIndicesWithMissingValues(fileName):
     data = []
     # Read the dataset from given file
     file = open(fileName)
-    reader = csv.reader(file)
+    reader = csv.reader(file, delimiter = '\t')
     next(reader)
     indicesWithMissValues = []
     i=0
@@ -44,7 +44,7 @@ def loadDataset(fileName, split=False, returnIndices = False):
 
     n = len(data) # number of observations
     X = np.array([x[11:21] for x in data]).astype(float)
-    #X = np.array([x[1:30] for x in data]).astype(float)
+    #X = np.array([x[21:31] for x in data]).astype(float)
     y = np.array([x[0] for x in data]).astype(np.int) #labels
 
     del data # free up the memory

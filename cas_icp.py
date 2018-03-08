@@ -9,17 +9,9 @@ from prettytable import PrettyTable
 import numpy as np
 
 
-svmFileName = "sr-mmp_nosalt.sdf.std_nodupl_class.sdf_descriptors.csv"
+svmFileName = "smiles_cas_N6512.sdf.std_class.sdf_descriptors.csv"
 
-svmPlusFileName = "sr-mmp_nosalt.sdf.std_nodupl_class.sdf_SVMLIGHT_Morgan_unhashed_radius_3.csv"
-
-# Tuned values: 10, .01 : .915, 1, .01:914, 100,.01:915, 1000,.01,915
-#
-# tuned C and gamma kernel parameters
-tunedSVMParam = [100, .1]  # [10, .01]
-tunedSVMStarParam = [100, .01] #[1000,.01]
-#tunedSVMPlus = [100, .001]
-tunedSVMPlus = [100, .00001]
+svmPlusFileName = "smiles_cas_N6512.sdf.std_class.sdf_SVMLIGHT_Morgan_unhashed_radius_3.csv"
 
 
 def prepareDataset(svmFile, svmPlusFile=None, returnAll = False):
@@ -54,8 +46,19 @@ def prepareDataset(svmFile, svmPlusFile=None, returnAll = False):
 
 
 
+# Parameter estimation using grid search with validation set
+def gridSearchWithCV(X_train, X_test,fileName):
+     return tune.gridSearchWithCV(X_train, X_test, fileName)
 
-# run SVM Plus for finger print descriptor file
+
+# run SVM+ for sign descriptor files
+def gridSearchSVMPlus(X_train, X_test, XStar_train,
+                      kernelParam, kernelParamStar, logFile):
+    return tune.gridSearchSVMPlus(X_train, X_test, XStar_train,
+                                  kernelParam=kernelParam, kernelParamStar=kernelParamStar,
+                                  logFile=logFile)
+
+
 def ICPWithSVMAndSVMPlus(svmFile, svmPlusFile):
     dirPath = "icpResults/"
     if not os.path.exists(dirPath):
@@ -79,41 +82,48 @@ def ICPWithSVMAndSVMPlus(svmFile, svmPlusFile):
         ofile.write("Size of the train set: " + str(X_train.shape[0]) + "\n")
         ofile.write("Size of the test set: " + str(X_test.shape[0]) + "\n")
         y_test = y_test.astype(int)
+
+        #tuning for SVM on X
+        C1, gamma1 = gridSearchWithCV(X_train, y_train, svmFile)
+
+        C2, gamma2 = gridSearchWithCV(XStar_train, yStar_train, svmPlusFile)
+
+        C, gamma = gridSearchSVMPlus(X_train, y_train, XStar_train,
+                                       gamma1, gamma2, svmPlusFile)
+
         #SVM on X
         pValues, y_predict = icp.ICPClassification(X_train, y_train, X_test,
-                                                   C= tunedSVMParam[0], gamma=tunedSVMParam[1],
+                                                   C= C1, gamma=gamma1,
                                                    X_calib=X_calib, y_calib=y_calib)
         correct = np.sum(y_predict == y_test)
         accuracy = correct / len(y_predict)
-
-        y_test[y_test == -1] = 0
 
         errRate, eff, val, obsFuzz = pm.pValues2PerfMetrics(pValues, y_test)
         avgSvmVal = avgSvmVal+val
         avgSvmOF = avgSvmOF+obsFuzz
         avgSvmAcc = avgSvmAcc + accuracy
         ofile.write("C = %f, gamma = %f, accuracy = %f \n" %
-                    (tunedSVMParam[0], tunedSVMParam[1], accuracy))
+                    (C1, gamma1, accuracy))
         ofile.write("errRate = %f, eff = %f, val = %f, obsFuzz = %f \n" %
                     (errRate, eff, val, obsFuzz))
         ofile.close()
+
         ofile = open(dirPath + svmFile, "a")
-        y_test[y_test == 0] = -1
+        #y_test[y_test == 0] = -1
 
         # SVM on X Star
         pValues, y_predict = icp.ICPClassification(XStar_train, yStar_train, XStar_test,
-                                                   C=tunedSVMStarParam[0], gamma=tunedSVMStarParam[1],
+                                                   C=C2, gamma=gamma2,
                                                    X_calib=XStar_calib, y_calib=yStar_calib)
         correct = np.sum(y_predict == y_test)
         accuracy = correct / len(y_predict)
 
-        y_test[y_test == -1] = 0
         errRate, eff, val, obsFuzz = pm.pValues2PerfMetrics(pValues, y_test)
         avgSvmStarVal = avgSvmStarVal + val
         avgSvmStarOF = avgSvmStarOF + obsFuzz
         avgSvmStarAcc = avgSvmStarAcc + accuracy
         ofile.write("C = %f, gamma = %f, accuracy = %f \n" %
-                    (tunedSVMStarParam[0], tunedSVMStarParam[1], accuracy))
+                    (C2, gamma2, accuracy))
         ofile.write("errRate = %f, eff = %f, val = %f, obsFuzz = %f \n" %
                     (errRate, eff, val, obsFuzz))
         ofile.close()
@@ -121,20 +131,18 @@ def ICPWithSVMAndSVMPlus(svmFile, svmPlusFile):
         y_test[y_test == 0] = -1
 
         pValues, y_predict  = icp.ICPClassification(X_train, y_train, X_test,
-                                        XStar=XStar_train, C=tunedSVMPlus[0], gamma=tunedSVMPlus[1],
-                                        K=tunedSVMParam[1], KStar=tunedSVMStarParam[1],
+                                        XStar=XStar_train, C=C, gamma=gamma,
+                                        K=gamma1, KStar=gamma2,
                                         X_calib=X_calib, y_calib=y_calib)
         correct = np.sum(y_predict == y_test)
         accuracy = correct / len(y_predict)
-
-        y_test[y_test == -1] = 0
 
         errRate, eff, val, obsFuzz = pm.pValues2PerfMetrics(pValues, y_test)
         avgSvmPlusVal = avgSvmPlusVal + val
         avgSvmPlusOF = avgSvmPlusOF + obsFuzz
         avgSvmPlusAcc = avgSvmPlusAcc + accuracy
         ofile.write("C = %f, gamma = %f, accuracy = %f \n" %
-                    (tunedSVMPlus[0], tunedSVMPlus[1], accuracy))
+                    (C, gamma, accuracy))
         ofile.write("errRate = %f, eff = %f, val = %f, obsFuzz = %f \n" %
                     (errRate, eff, val, obsFuzz))
 

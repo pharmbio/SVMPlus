@@ -184,15 +184,16 @@ def CalibrationPlot(pValues, testLabels, color='b'):
 #input: matrix of p-values, test set and sifnificance level
 #output: validity, efficiency, error rate and observed fuzziness
 def pValues2PerfMetrics(matPValues, testLabels, sigfLevel = 0.05):
-  errRate = ErrorRate(matPValues, testLabels, sigfLevel)
-  eff = Efficiency(matPValues, testLabels, sigfLevel)
-  val = Validity(matPValues, testLabels)
-  obsFuzz = ObsFuzziness(matPValues, testLabels)
+    testLabels[testLabels == -1] = 0
+    errRate = ErrorRate(matPValues, testLabels, sigfLevel)
+    eff = Efficiency(matPValues, testLabels, sigfLevel)
+    val = Validity(matPValues, testLabels)
+    obsFuzz = ObsFuzziness(matPValues, testLabels)
 
-  #print('Error rate: ', errRate)
-  #print('Efficiency: ', eff)
-  #print('Deviation from validity: ', val)
-  #print('Observed fuzziness: ', obsFuzz)
+    #print('Error rate: ', errRate)
+    #print('Efficiency: ', eff)
+    #print('Deviation from validity: ', val)
+    #print('Observed fuzziness: ', obsFuzz)
 
-  return errRate, eff, val, obsFuzz
+    return errRate, eff, val, obsFuzz
 

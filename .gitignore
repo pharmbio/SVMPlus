@@ -18,4 +18,5 @@ gridValidationResults/
 testCode/MNISTDataset.py
 data/
 gridSearchResults/
+icpResults/
 

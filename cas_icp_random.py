@@ -9,17 +9,17 @@ from prettytable import PrettyTable
 import numpy as np
 
 
-svmFileName = "sr-mmp_nosalt.sdf.std_nodupl_class.sdf_descriptors.csv"
+svmFileName = "smiles_cas_N6512.sdf.std_class.sdf_descriptors.csv"
 
-svmPlusFileName = "sr-mmp_nosalt.sdf.std_nodupl_class.sdf_SVMLIGHT_Morgan_unhashed_radius_3.csv"
+svmPlusFileName = "smiles_cas_N6512.sdf.std_class.sdf_SVMLIGHT_Morgan_unhashed_radius_3.csv"
 
 # Tuned values: 10, .01 : .915, 1, .01:914, 100,.01:915, 1000,.01,915
 #
 # tuned C and gamma kernel parameters
-tunedSVMParam = [100, .1]  # [10, .01]
-tunedSVMStarParam = [100, .01] #[1000,.01]
+tunedSVMParam = [1000, .1]  # [10, .01]
+tunedSVMStarParam = [1000, .01] #[1000,.01]
 #tunedSVMPlus = [100, .001]
-tunedSVMPlus = [100, .00001]
+tunedSVMPlus = [100, .1]
 
 
 def prepareDataset(svmFile, svmPlusFile=None, returnAll = False):
@@ -51,7 +51,6 @@ def prepareDataset(svmFile, svmPlusFile=None, returnAll = False):
         return X_train, X_test, X_calib, y_train, y_test, y_calib, XStar_train
 
     return X_train, X_test, X_calib, y_train, y_test, y_calib
-
 
 
 

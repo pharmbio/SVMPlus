@@ -24,7 +24,7 @@ def resizeImage(image):
     #plt.matshow(originalImage )
     #plt.show()
     '''
-    resizedImage = scipy.ndimage.zoom(originalImage, 1/(2.8), order=0)
+    resizedImage = scipy.ndimage.zoom(originalImage, 8/(28), order=0)
     # to plot resized image
     '''
     #plt.gray()
@@ -32,7 +32,8 @@ def resizeImage(image):
     #plt.show()
     #print(resizedImage.shape) #to confirm it is resized to 10by10
     '''
-    return resizedImage.reshape(100, )
+    #return resizedImage.reshape(100, )
+    return resizedImage.reshape(64, )
 
 # Reads original MNIST data and stores images only for digits 5 and 8
 def preProcessMNISTData():
@@ -128,11 +129,11 @@ def resizeMNISTData():
     #resizeImage(X[0])
     #for i in range(len(X)):
     X_resized = np.array([resizeImage(x) for x in X])
-    np.savetxt("/home/niharika/PycharmProjects/SVMPlus/data/mnistResizedData.csv", X_resized, delimiter=",")
+    np.savetxt("/home/niharika/PycharmProjects/SVMPlus/data/mnist10by10.csv", X_resized, delimiter=",")
 
 
 def testResizedMNISTDataset():
-    ifile = open("/home/niharika/PycharmProjects/SVMPlus/data/mnistResizedData.csv")
+    ifile = open("/home/niharika/PycharmProjects/SVMPlus/data/mnist10by10.csv")
     reader = csv.reader(ifile)
     a = []
     for row in reader:
@@ -184,7 +185,7 @@ def testResizedMNISTDataset():
 
 # run SVM on X, SVM on XStar and SVM+ on X (using XStar as prib-info)
 def testSVMPlusMNISTDataset():
-    ifile = open("/home/niharika/PycharmProjects/SVMPlus/data/mnistResizedData.csv")
+    ifile = open("/home/niharika/PycharmProjects/SVMPlus/data/mnist10by10.csv")
     reader = csv.reader(ifile)
     a = []
     for row in reader:
@@ -258,7 +259,7 @@ def testSVMPlusMNISTDataset():
 
 
 def loadMNISTData():
-    ifile = open("/home/niharika/PycharmProjects/SVMPlus/data/mnistResizedData.csv")
+    ifile = open("/home/niharika/PycharmProjects/SVMPlus/data/mnist10by10.csv")
     reader = csv.reader(ifile)
     a = []
     for row in reader:
