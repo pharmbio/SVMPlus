@@ -4,7 +4,7 @@ import os
 from sklearn.model_selection import train_test_split
 from conformalClassification import icp
 from conformalClassification import perf_measure as pm
-from fileUtils import tuneWithCV as tune
+from fileUtils import parTuneWithCV as tune
 from prettytable import PrettyTable
 import numpy as np
 
@@ -48,7 +48,7 @@ def prepareDataset(svmFile, svmPlusFile=None, returnAll = False):
 
 # Parameter estimation using grid search with validation set
 def gridSearchWithCV(X_train, X_test,fileName):
-     return tune.gridSearchWithCV(X_train, X_test, fileName)
+     return tune.parSVMGridSearch(X_train, X_test, fileName)
 
 
 # run SVM+ for sign descriptor files
@@ -88,8 +88,8 @@ def ICPWithSVMAndSVMPlus(svmFile, svmPlusFile):
 
         C2, gamma2 = gridSearchWithCV(XStar_train, yStar_train, svmPlusFile)
 
-        C, gamma = gridSearchSVMPlus(X_train, y_train, XStar_train,
-                                       gamma1, gamma2, svmPlusFile)
+        C, gamma = gridSearchSVMPlus(X_train, y_train, XStar_train, logFile=svmPlusFile,
+                                     kernelParam= gamma1, kernelParamStar=gamma2 )
 
         #SVM on X
         pValues, y_predict = icp.ICPClassification(X_train, y_train, X_test,
