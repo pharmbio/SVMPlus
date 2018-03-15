@@ -8,7 +8,7 @@ from prettytable import PrettyTable
 import numpy as np
 
 
-svmFileName = "mnist10by10.csv"
+svmFileName = "mnist8by8.csv"
 svmPlusFileName = "mnistData.csv"
 
 nSample = 4000

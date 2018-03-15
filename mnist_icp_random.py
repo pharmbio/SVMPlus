@@ -8,7 +8,7 @@ from prettytable import PrettyTable
 import numpy as np
 
 
-svmFileName = "mnist10by10.csv"
+svmFileName = "mnist8by8.csv"
 
 svmPlusFileName = "mnistData.csv"
 
@@ -19,15 +19,6 @@ tunedSVMParam = [100, .000001]  # [10, .01]
 tunedSVMStarParam = [100, .000001] #[1000,.01]
 #tunedSVMPlus = [100, .001]
 tunedSVMPlus = [10, .001]
-
-resizedFile = "mnist10by10.csv"
-
-mnistFile = "mnistData.csv"
-
-# tuned SVM C/kernel parameters
-tunedSVMX = [100, .000001]  # [100, .1]
-tunedSVMXStar = [100, .000001]  # 1000,.01
-tunedSVMPlus = [10, .000001]
 
 nSample = 4000
 

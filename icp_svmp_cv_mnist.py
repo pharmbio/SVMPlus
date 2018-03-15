@@ -8,7 +8,7 @@ from prettytable import PrettyTable
 import csv
 
 
-resizedFile = "data/mnist10by10.csv"
+resizedFile = "data/mnist8by8.csv"
 
 mnistFile = "data/mnistData.csv"
 
