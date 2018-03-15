@@ -194,6 +194,6 @@ def pValues2PerfMetrics(matPValues, testLabels, sigfLevel = 0.05):
     #print('Efficiency: ', eff)
     #print('Deviation from validity: ', val)
     #print('Observed fuzziness: ', obsFuzz)
-
+    testLabels[testLabels == 0] = -1
     return errRate, eff, val, obsFuzz
 

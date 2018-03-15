@@ -14,6 +14,7 @@ A bar plot with errorbars and height labels on individual bars
 """
 import numpy as np
 import matplotlib.pyplot as plt
+
 if 1:
     N = 4
     svmX = (0.015103, 0.272146, 0.285467, 0.260612)
@@ -23,20 +24,21 @@ if 1:
     width = 0.25       # the width of the bars
 
     fig, ax = plt.subplots()
-    rects1 = ax.bar(ind, svmX , width, color='pink')
+    rects1 = ax.bar(ind, svmX , width, color=(1.0,0.5,0.62), edgecolor = "black")
 
-    rects2 = ax.bar(ind + width, svmXStar , width, color='y')
+    rects2 = ax.bar(ind + width, svmXStar , width, color='y', edgecolor = "black")
 
-    rects3 = ax.bar(ind + width+width, svmPlus , width, color='g')
+    rects3 = ax.bar(ind + width+width, svmPlus , width, color=(0.2588,0.4433,1.0), edgecolor = "black")
 
     # add some text for labels, title and axes ticks
     ax.set_ylabel('Observed Fuzziness')
+    ax.set_xlabel('Dataset')
     plt.ylim((0, .3))
     #ax.set_title('Comparision of efficiency')
     ax.set_xticks(ind + width )
     ax.set_xticklabels(('MNIST', 'AHR', 'HANSEN', 'MMP'))
 
-    ax.legend((rects1[0], rects2[0], rects3[0]), ('SVM on X', 'SVM on X*', 'SVM on X and X* as PI'))
+    ax.legend((rects1[0], rects2[0], rects3[0]), ('SVM on X', 'SVM on X', 'SVM+ on X and X* as PI'))
 
 
     def autolabel(rects):
@@ -67,20 +69,21 @@ if 0:
     width = 0.25       # the width of the bars
 
     fig, ax = plt.subplots()
-    rects1 = ax.bar(ind, svmX , width, color='pink')
+    rects1 = ax.bar(ind, svmX , width, color=(1.0,0.5,0.62), edgecolor = "black")
 
-    rects2 = ax.bar(ind + width, svmXStar , width, color='y')
+    rects2 = ax.bar(ind + width, svmXStar , width, color='y', edgecolor = "black")
 
-    rects3 = ax.bar(ind + width+width, svmPlus , width, color='g')
+    rects3 = ax.bar(ind + width+width, svmPlus , width, color=(0.2588,0.4433,1.0), edgecolor = "black")
 
     # add some text for labels, title and axes ticks
-    ax.set_ylabel('Prediction Accuracy')
+    ax.set_ylabel('Observed Fuzziness')
+    ax.set_xlabel('Dataset')
     plt.ylim((.55, 1))
     #ax.set_title('Comparision of predictive performance')
     ax.set_xticks(ind + width )
     ax.set_xticklabels(('MNIST', 'AHR', 'HANSEN', 'MMP'))
 
-    ax.legend((rects1[0], rects2[0], rects3[0]), ('SVM on X', 'SVM on X*', 'SVM on X and X* as PI'))
+    ax.legend((rects1[0], rects2[0], rects3[0]), ('SVM on X', 'SVM on X*', 'SVM+ on X and X* as PI'))
 
 
     def autolabel(rects):
